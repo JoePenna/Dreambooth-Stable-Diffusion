@@ -149,13 +149,6 @@ def get_parser(**parser_kwargs):
         default=True,
         help="Prepend the final directory in the data_root to the output directory name")
 
-    parser.add_argument(
-        "--max_steps",
-        type=int,
-        required=False,
-        default=1000,
-        help="Number of iterations to run")
-
     parser.add_argument("--actual_resume", 
         type=str,
         required=True,
