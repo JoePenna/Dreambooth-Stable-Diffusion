@@ -7,9 +7,7 @@ from torchvision import transforms
 
 import random
 
-training_templates_smallest = [
-    'joepenna {}',
-]
+training_templates_smallest = ['joepenna {}'] # inline to help with sed replace
 
 reg_templates_smallest = [
     '{}',
