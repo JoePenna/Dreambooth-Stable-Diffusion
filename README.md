@@ -186,10 +186,8 @@ No problem. We can fix that with the prompt:
 
 # <a name="hugging-face-diffusers"></a> Hugging Face Diffusers - Alternate Option
 
-Note: This is a diffuser implementation, and use is much more complicated than using a *.ckpy file.
+Dreambooth is now supported in HuggingFace Diffusers for training with Stable Diffusion.
 
-At the moment, there is no way to use the diffusers model with most repos (e.g. AUTOMATIC1111, HLKY, DeForum, etc)
-
-Dreambooth is now supported in Hugging Face diffusers for training with stable diffusion, try it out in the colab:
+Try it out here:
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/sd_dreambooth_training.ipynb)
