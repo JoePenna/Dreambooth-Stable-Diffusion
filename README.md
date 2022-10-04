@@ -13,7 +13,6 @@
 - [Hugging Face Diffusers](#hugging-face-diffusers)
 
 # The Repo Formerly Known As "Dreambooth"
-## ...now more accurately described as "Unfrozen Model Textual Inversion for Stable Diffusion"
 ![image](https://user-images.githubusercontent.com/100188076/192390551-cb89364f-af57-4aed-8f3d-f9eb9b61cf95.png)
 
 ## <a name="notes-by-joe-penna"></a>  Notes by Joe Penna
