@@ -1,5 +1,6 @@
 import argparse, os, sys, datetime, glob, importlib, csv
 from ldm.modules.pruningckptio import PruningCheckpointIO
+import json
 import numpy as np
 import time
 import torch
@@ -8,6 +9,7 @@ import torchvision
 import pytorch_lightning as pl
 
 from packaging import version
+from pathlib import Path
 from omegaconf import OmegaConf
 from torch.utils.data import random_split, DataLoader, Dataset, Subset
 from functools import partial
@@ -24,6 +26,11 @@ from ldm.util import instantiate_from_config
 
 ## Un-comment this for windows
 ## os.environ["PL_TORCH_DISTRIBUTED_BACKEND"] = "gloo"
+
+def write_this_run_configuration(opt, path):
+    Path(path).mkdir(parents=True, exist_ok=True)
+    with open(os.path.join(path, "training_params.json"), "w") as f:
+        f.write(json.dumps(opt.__dict__, indent=4))
 
 def load_model_from_config(config, ckpt, verbose=False):
     print(f"Loading model from {ckpt}")
@@ -621,6 +628,8 @@ if __name__ == "__main__":
 
     ckptdir = os.path.join(logdir, "checkpoints")
     cfgdir = os.path.join(logdir, "configs")
+    training_info_dir = os.path.join(logdir, "training_config")
+    write_this_run_configuration(opt, training_info_dir)
     seed_everything(opt.seed)
 
     try:
