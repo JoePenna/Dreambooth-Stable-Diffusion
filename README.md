@@ -90,7 +90,7 @@ Now, if you wanna try to do this... please read the warnings below first:
 The majority of the code in this repo was written by Rinon Gal et. al, the authors of the Textual Inversion research paper. Though a few ideas about regularization images and prior loss preservation (ideas from "Dreambooth") were added in, out of respect to both the MIT team and the Google researchers, I'm renaming this fork to:
 *"The Repo Formerly Known As "Dreambooth""*.
 
-For an alternate implementation that attempts prior loss preservation, please see ["Alternate Option"](#hugging-face-diffusers) below.
+For an alternate implementation , please see ["Alternate Option"](#hugging-face-diffusers) below.
 
 
 # <a name="using-the-generated-model"></a> Using the generated model
