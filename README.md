@@ -87,26 +87,8 @@ Now, if you wanna try to do this... please read the warnings below first:
 - Follow the instructions in the workbook and start training
 
 # <a name="text-vs-dreamb"></a>  Textual Inversion vs. Dreambooth
-The majority of the code in this repo was written by Rinon Gal et. al, the authors of the Textual Inversion research paper.
-
-A few bits about regularization images were added that we all thought were super important -- all the researchers included!
-
-...until my images were trained under the class "dog":
-<br><img src="https://media.discordapp.net/attachments/1024716296610385981/1024933960083587102/unknown.png" width="200">
-
-...and under the nonsensical class "§¶•" instead of "man" or "woman" or "person":
-<br><img src="https://media.discordapp.net/attachments/1024716296610385981/1024934146415529984/unknown.png" width="200">
-
-...and with completely blank regularization images:
-<br><img src="https://media.discordapp.net/attachments/1023293330601287711/1024933371102629898/IMG_7579.JPG" width="200">
-
-And here's what `"photograph of an apple"` looked like before I messed with code a bit:
-<br><img src="https://media.discordapp.net/attachments/1018943815370952855/1018946569850069052/unknown.png" width="200">
-
-We're not realizing the "regularization class" bits of this code have no effect, and that there is little to no prior preservation loss.
-
-So, out of respect to both the MIT team and the Google researchers, I'm renaming this fork to:
-*"Unfrozen Model Textual Inversion for Stable Diffusion"*.
+The majority of the code in this repo was written by Rinon Gal et. al, the authors of the Textual Inversion research paper. Though a few ideas about regularization images and prior loss preservation (ideas from "Dreambooth") were added in, out of respect to both the MIT team and the Google researchers, I'm renaming this fork to:
+*"The Repo Formerly Known As "Dreambooth""*.
 
 For an alternate implementation that attempts prior loss preservation, please see ["Alternate Option"](#hugging-face-diffusers) below.
 
