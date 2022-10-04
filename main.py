@@ -179,8 +179,13 @@ def get_parser(**parser_kwargs):
 
     parser.add_argument("--class_word", 
         type=str, 
-        default="dog",
+        default="cat",
         help="Placeholder token which will be used to denote the concept in future prompts")
+
+    parser.add_argument("--placeholder_token", 
+        type=str, 
+        default="lilbit",
+        help="The token that will be used to represent the subject of this training.")
 
     parser.add_argument("--init_word", 
         type=str, 
@@ -635,19 +640,14 @@ if __name__ == "__main__":
             cpu = False
         trainer_opt = argparse.Namespace(**trainer_config)
         lightning_config.trainer = trainer_config
-
-        # model
-
-        # config.model.params.personalization_config.params.init_word = opt.init_word
-        # config.model.params.personalization_config.params.embedding_manager_ckpt = opt.embedding_manager_ckpt
-        # config.model.params.personalization_config.params.placeholder_tokens = opt.placeholder_tokens
-
-        # if opt.init_word:
-        #     config.model.params.personalization_config.params.initializer_words[0] = opt.init_word
             
-        config.data.params.train.params.placeholder_token = opt.class_word
-        config.data.params.reg.params.placeholder_token = opt.class_word
-        config.data.params.validation.params.placeholder_token = opt.class_word
+        config.data.params.train.params.class_word = opt.class_word
+        config.data.params.reg.params.class_word = opt.class_word
+        config.data.params.validation.params.class_word = opt.class_word
+
+        config.data.params.train.params.placeholder_token = opt.placeholder_token
+        config.data.params.reg.params.placeholder_token = opt.placeholder_token
+        config.data.params.validation.params.placeholder_token = opt.placeholder_token
 
         if opt.actual_resume:
             model = load_model_from_config(config, opt.actual_resume)

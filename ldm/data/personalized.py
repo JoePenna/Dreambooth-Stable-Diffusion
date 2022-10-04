@@ -8,7 +8,7 @@ from torchvision import transforms
 import random
 
 training_templates_smallest = [
-    'joepenna {}',
+    '{}',
 ]
 
 reg_templates_smallest = [
@@ -16,7 +16,6 @@ reg_templates_smallest = [
 ]
 
 imagenet_templates_small = [
-
     '{}',
 ]
 
@@ -37,11 +36,11 @@ class PersonalizedBase(Dataset):
                  interpolation="bicubic",
                  flip_p=0.0,
                  set="train",
-                 placeholder_token="dog",
+                 placeholder_token="lilbit",
                  per_image_tokens=False,
                  center_crop=False,
                  mixing_prob=0.25,
-                 coarse_class_text=None,
+                 class_word="cat",
                  reg=False
                  ):
 
@@ -60,7 +59,7 @@ class PersonalizedBase(Dataset):
         self.center_crop = center_crop
         self.mixing_prob = mixing_prob
 
-        self.coarse_class_text = coarse_class_text
+        self.coarse_class_text = class_word
 
         if per_image_tokens:
             assert self.num_images < len(
@@ -88,16 +87,20 @@ class PersonalizedBase(Dataset):
         if not image.mode == "RGB":
             image = image.convert("RGB")
 
-        placeholder_string = self.placeholder_token
-        if self.coarse_class_text:
-            placeholder_string = f"{self.coarse_class_text} {placeholder_string}"
+        placeholder_string = f"{self.placeholder_token} {self.coarse_class_text}"
 
         if not self.reg:
-            text = random.choice(training_templates_smallest).format(
-                placeholder_string)
+            text = random.choice(
+                    training_templates_smallest
+                ).format(
+                    placeholder_string
+                )
         else:
-            text = random.choice(reg_templates_smallest).format(
-                placeholder_string)
+            text = random.choice(
+                    reg_templates_smallest
+                ).format(
+                    self.coarse_class_text
+                )
 
         example["caption"] = text
 
