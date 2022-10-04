@@ -1,4 +1,5 @@
 import argparse, os, sys, datetime, glob, importlib, csv
+from ldm.modules.pruningckptio import PruningCheckpointIO
 import numpy as np
 import time
 import torch
@@ -775,7 +776,8 @@ if __name__ == "__main__":
 
         trainer_kwargs["callbacks"] = [instantiate_from_config(callbacks_cfg[k]) for k in callbacks_cfg]
         trainer_kwargs["max_steps"] = trainer_opt.max_steps
-
+        trainer_kwargs["plugins"] = PruningCheckpointIO()
+    
         trainer = Trainer.from_argparse_args(trainer_opt, **trainer_kwargs)
         trainer.logdir = logdir  ###
 
