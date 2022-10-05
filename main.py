@@ -152,9 +152,14 @@ def get_parser(**parser_kwargs):
     parser.add_argument(
         "--max_training_steps",
         type=int,
-        required=False,
-        default=1000,
-        help="Number of iterations to run")
+        required=True,
+        help="Number of training steps to run")
+
+    parser.add_argument(
+        "--token",
+        type=str,
+        required=True,
+        help="Unique token you want to represent your trained model. Ex: firstNameLastName.")
 
     parser.add_argument("--actual_resume", 
         type=str,
@@ -177,9 +182,9 @@ def get_parser(**parser_kwargs):
         help="Initialize embedding manager from a checkpoint")
 
     parser.add_argument("--class_word", 
-        type=str, 
-        default="dog",
-        help="Placeholder token which will be used to denote the concept in future prompts")
+        type=str,
+        required=True,
+        help="Match class_word to the category of images you want to train. Example: 'man', 'woman', or 'dog'.")
 
     parser.add_argument("--init_word", 
         type=str, 
@@ -643,10 +648,15 @@ if __name__ == "__main__":
 
         # if opt.init_word:
         #     config.model.params.personalization_config.params.initializer_words[0] = opt.init_word
-            
-        config.data.params.train.params.placeholder_token = opt.class_word
-        config.data.params.reg.params.placeholder_token = opt.class_word
-        config.data.params.validation.params.placeholder_token = opt.class_word
+
+        # Setup the token and class word to get passed to personalized.py
+        config.data.params.train.params.coarse_class_text = opt.class_word
+        config.data.params.reg.params.coarse_class_text = opt.class_word
+        config.data.params.validation.params.coarse_class_text = opt.class_word
+
+        config.data.params.train.params.placeholder_token = opt.token
+        config.data.params.reg.params.placeholder_token = opt.token
+        config.data.params.validation.params.placeholder_token = opt.token
 
         if opt.actual_resume:
             model = load_model_from_config(config, opt.actual_resume)
