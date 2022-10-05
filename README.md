@@ -27,7 +27,7 @@ I can't release all the tests for the movie I'm working on, but when I test with
 
 Lots of these tests were done with a buddy of mine -- Niko from CorridorDigital. It might be how you found this repo!
 
-I'm not really a coder. I'm just stubborn, and I'm not afraid of googling. So, eventually, some really smart folks joined in and have been contributing. In this repo, specifically: (@djbielejeski)[https://github.com/djbielejeski] @gammagec @MrSaad –– but so many others in our Discord!
+I'm not really a coder. I'm just stubborn, and I'm not afraid of googling. So, eventually, some really smart folks joined in and have been contributing. In this repo, specifically: [@djbielejeski](https://github.com/djbielejeski) @gammagec @MrSaad –– but so many others in our Discord!
 
 This is no longer my repo. This is the people-who-wanna-see-Dreambooth-on-SD-working-well's repo!
 
