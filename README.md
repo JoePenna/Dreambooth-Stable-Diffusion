@@ -13,7 +13,6 @@
 - [Hugging Face Diffusers](#hugging-face-diffusers)
 
 # The Repo Formerly Known As "Dreambooth"
-## ...now more accurately described as "Unfrozen Model Textual Inversion for Stable Diffusion"
 ![image](https://user-images.githubusercontent.com/100188076/192390551-cb89364f-af57-4aed-8f3d-f9eb9b61cf95.png)
 
 ## <a name="notes-by-joe-penna"></a>  Notes by Joe Penna
@@ -88,28 +87,10 @@ Now, if you wanna try to do this... please read the warnings below first:
 - Follow the instructions in the workbook and start training
 
 # <a name="text-vs-dreamb"></a>  Textual Inversion vs. Dreambooth
-The majority of the code in this repo was written by Rinon Gal et. al, the authors of the Textual Inversion research paper.
+The majority of the code in this repo was written by Rinon Gal et. al, the authors of the Textual Inversion research paper. Though a few ideas about regularization images and prior loss preservation (ideas from "Dreambooth") were added in, out of respect to both the MIT team and the Google researchers, I'm renaming this fork to:
+*"The Repo Formerly Known As "Dreambooth""*.
 
-A few bits about regularization images were added that we all thought were super important -- all the researchers included!
-
-...until my images were trained under the class "dog":
-<br><img src="https://media.discordapp.net/attachments/1024716296610385981/1024933960083587102/unknown.png" width="200">
-
-...and under the nonsensical class "§¶•" instead of "man" or "woman" or "person":
-<br><img src="https://media.discordapp.net/attachments/1024716296610385981/1024934146415529984/unknown.png" width="200">
-
-...and with completely blank regularization images:
-<br><img src="https://media.discordapp.net/attachments/1023293330601287711/1024933371102629898/IMG_7579.JPG" width="200">
-
-And here's what `"photograph of an apple"` looked like before I messed with code a bit:
-<br><img src="https://media.discordapp.net/attachments/1018943815370952855/1018946569850069052/unknown.png" width="200">
-
-We're not realizing the "regularization class" bits of this code have no effect, and that there is little to no prior preservation loss.
-
-So, out of respect to both the MIT team and the Google researchers, I'm renaming this fork to:
-*"Unfrozen Model Textual Inversion for Stable Diffusion"*.
-
-For an alternate implementation that attempts prior loss preservation, please see ["Alternate Option"](#hugging-face-diffusers) below.
+For an alternate implementation , please see ["Alternate Option"](#hugging-face-diffusers) below.
 
 
 # <a name="using-the-generated-model"></a> Using the generated model
@@ -205,10 +186,8 @@ No problem. We can fix that with the prompt:
 
 # <a name="hugging-face-diffusers"></a> Hugging Face Diffusers - Alternate Option
 
-Note: This is a diffuser implementation, and use is much more complicated than using a *.ckpy file.
+Dreambooth is now supported in HuggingFace Diffusers for training with Stable Diffusion.
 
-At the moment, there is no way to use the diffusers model with most repos (e.g. AUTOMATIC1111, HLKY, DeForum, etc)
-
-Dreambooth is now supported in Hugging Face diffusers for training with stable diffusion, try it out in the colab:
+Try it out here:
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/sd_dreambooth_training.ipynb)
