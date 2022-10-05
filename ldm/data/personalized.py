@@ -5,28 +5,9 @@ from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
 
-import random
-
-training_templates_smallest = [
-    '{}',
-]
-
-reg_templates_smallest = [
-    '{}',
-]
-
-imagenet_templates_small = [
-    '{}',
-]
-
-imagenet_dual_templates_small = [
-    '{} with {}'
-]
-
 per_img_token_list = [
     'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
 ]
-
 
 class PersonalizedBase(Dataset):
     def __init__(self,
@@ -34,7 +15,7 @@ class PersonalizedBase(Dataset):
                  size=None,
                  repeats=100,
                  interpolation="bicubic",
-                 flip_p=0.0,
+                 flip_p=0.5,
                  set="train",
                  placeholder_token="lilbit",
                  per_image_tokens=False,
@@ -95,17 +76,9 @@ class PersonalizedBase(Dataset):
             placeholder_string = f"{placeholder_string} {self.coarse_class_text}"
 
         if not self.reg:
-            text = random.choice(
-                    training_templates_smallest
-                ).format(
-                    placeholder_string
-                )
+            text = placeholder_string
         else:
-            text = random.choice(
-                    reg_templates_smallest
-                ).format(
-                    self.coarse_class_text
-                )
+            text = self.coarse_class_text
 
         example["caption"] = text
 

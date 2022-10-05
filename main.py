@@ -153,9 +153,14 @@ def get_parser(**parser_kwargs):
     parser.add_argument(
         "--max_training_steps",
         type=int,
-        required=False,
-        default=1000,
-        help="Number of iterations to run")
+        required=True,
+        help="Number of training steps to run")
+
+    parser.add_argument(
+        "--token",
+        type=str,
+        required=True,
+        help="Unique token you want to represent your trained model. Ex: firstNameLastName.")
 
     parser.add_argument("--actual_resume", 
         type=str,
@@ -180,7 +185,7 @@ def get_parser(**parser_kwargs):
     parser.add_argument("--class_word", 
         type=str, 
         default="cat",
-        help="Placeholder token which will be used to denote the concept in future prompts")
+        help="Match class_word to the category of images you want to train. Example: 'man', 'woman', or 'dog'.")
 
     parser.add_argument("--placeholder_token", 
         type=str, 
