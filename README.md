@@ -99,7 +99,7 @@ The `ground truth` (real picture, caution: very beautiful woman)
 
 Same prompt for all of these images below:
 
-| `sks` | `woman` | `Natalie Portman` | `Kate Mara` |
+| `sks person` | `woman person` | `Natalie Portman person` | `Kate Mara person` |
 | ----- | ------- | ----------------- | ----------- |
 | <img src="https://user-images.githubusercontent.com/100188076/192403506-ab96c652-f7d0-47b0-98fa-267defa1e511.png" width="200"> | <img src="https://user-images.githubusercontent.com/100188076/192403491-cb258777-5091-4492-a6cc-82305fa729f4.png" width="200"> | <img src="https://user-images.githubusercontent.com/100188076/192403437-f9a93720-d41c-4334-8901-fa2d2a10fe36.png" width="200"> | <img src="https://user-images.githubusercontent.com/100188076/192403461-1f6972d9-64d0-46b0-b2ed-737e47aae31e.png" width="200"> |   
 
