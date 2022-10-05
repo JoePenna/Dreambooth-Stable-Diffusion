@@ -41,7 +41,8 @@ class PersonalizedBase(Dataset):
                  center_crop=False,
                  mixing_prob=0.25,
                  class_word="cat",
-                 reg=False
+                 reg=False,
+                 subject_only=False
                  ):
 
         self.data_root = data_root
@@ -60,6 +61,7 @@ class PersonalizedBase(Dataset):
         self.mixing_prob = mixing_prob
 
         self.coarse_class_text = class_word
+        self.subject_only = subject_only
 
         if per_image_tokens:
             assert self.num_images < len(
@@ -87,7 +89,10 @@ class PersonalizedBase(Dataset):
         if not image.mode == "RGB":
             image = image.convert("RGB")
 
-        placeholder_string = f"{self.placeholder_token} {self.coarse_class_text}"
+        placeholder_string = f"{self.placeholder_token}"
+
+        if not self.subject_only:
+            placeholder_string = f"{placeholder_string} {self.coarse_class_text}"
 
         if not self.reg:
             text = random.choice(

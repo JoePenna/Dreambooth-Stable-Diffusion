@@ -187,6 +187,13 @@ def get_parser(**parser_kwargs):
         default="lilbit",
         help="The token that will be used to represent the subject of this training.")
 
+    parser.add_argument("--subject_only", 
+        type=str2bool,
+        const=True,
+        default=False,
+        nargs="?",
+        help="Train only using the placeholder token - subject - and no class.")
+
     parser.add_argument("--init_word", 
         type=str, 
         help="Word to use as source for initial token embedding")
@@ -642,6 +649,7 @@ if __name__ == "__main__":
         lightning_config.trainer = trainer_config
             
         config.data.params.train.params.class_word = opt.class_word
+        config.data.params.train.params.subject_only = opt.subject_only
         config.data.params.reg.params.class_word = opt.class_word
         config.data.params.validation.params.class_word = opt.class_word
 
