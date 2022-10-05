@@ -4,6 +4,7 @@
 - [Setup](#setup)
   - [Easy RunPod Instructions](#easy-runpod-instructions)
   - [Vast.AI Setup](#vast-ai-setup)
+  - [Windows 10 Setup](#windows-10-setup)
 - [Textual Inversion vs. Dreambooth](#text-vs-dreamb)
 - [Using the Generated Model](#using-the-generated-model)
 - [Debugging Your Results](#debugging-your-results)
@@ -85,6 +86,73 @@ Now, if you wanna try to do this... please read the warnings below first:
 - Navigate into the new `Dreambooth-Stable-Diffusion` directory on the left and open the `dreambooth_runpod_joepenna.ipynb` file
   - ![img.png](readme-images/vast-ai-step6-open-notebook.png)
 - Follow the instructions in the workbook and start training
+
+## <a name="windows-10-setup"></a>  Windows 10 Instructions
+
+1. Install python 3.10
+2. Install miniconda3
+3. Clone the dreambooth repo somwhere
+4. in the root directory of dreambooth edit `environment.yaml` and line 1 change `ldm` by `ldmbooth` to avoid conflicts with stable diffusion
+5. open a miniconda prompt (start> anaconda promprt (miniconda3) and type the following :
+6. create the miniconda environment and activate it :
+   ```sh
+   conda create env -f environment.yaml
+   ```
+   ```sh
+   conda activate ldmbooth
+   ```
+7. every command will then be typed in the miniconda prompt, not the regular windows cmd, you need to position yourself in the root directory of dreambooth otherwhise some script will fail due to some relative path issues
+   ```sh
+   cd c:\repos\Dreambooth-Stable-Diffusion
+   ```
+8. generate 1503 regularisation images
+   ```sh
+   class_word = "person"
+   n_images = str(1503)
+   model_location = r"C:\Users\xxxxxx\Dropbox\dreambooth_shared_workspace\sd-v1-4-full-ema.ckpt"
+
+   cmd = f'python scripts/stable_txt2img.py --seed 10 --ddim_eta 0.0 --n_samples 1 --n_iter {n_images} --scale 10.0 --ddim_steps 50 --ckpt {model_location} --prompt "{class_word}"'
+   ```
+
+9. your regularisation images are then in `"C:\xxxxx\Dreambooth-Stable-Diffusion_2\outputs\txt2img-samples"` move them somwhere else
+10. train on your photos (they need to be 512x512 resolution)
+   ```sh
+   batch_size = 2000
+   project_name = f"my_project_name"
+   class_word = "person"  # << match this word to the class word from regularization images above
+   reg_ims_path = r"path\to\your\regularisation_images"
+   model_path = r"C:\Users\xxxx\Dropbox\dreambooth_shared_workspace\sd-v1-4-full-ema.ckpt"
+   training_ims_path = r"C:\Users\xxxxx\Dropbox\peoples_pics\me\512x512"
+
+   command =  f'python "main.py" --base configs/stable-diffusion/v1-finetune_unfrozen.yaml -t --actual_resume "{model_path}" --reg_data_root "{reg_ims_path}" -n {project_name} --gpus 0, --data_root "{training_ims_path}" --batch_size {str(batch_size)} --class_word {class_word}'
+   ```
+once you get an exception stacktrace saying "MISCONFIGURATION NO DATALOADER" then training is complete
+
+11. prune your trained model (remove useless data and saves 80% space)
+   ```sh
+    last_checkpoint_file = r"C:\xxxxx\Dreambooth-Stable-Diffusion\logs\<project_name_from_previous_step>\checkpoints\last.ckpt"
+    python prune_ckpt.py --ckpt {last_checkpoint_file}
+   ```
+12. find you token word, open Dreambooth-Stable-Diffusion\ldm\data\personalized.py, look at line 10-13
+   ```sh
+   training_templates_smallest = [
+    'demoura {}',
+   ]
+   ```
+   
+here you token word is demoura
+ 
+13. generate images
+   ```sh
+   pruned_model = r"C:\xxxxx\Dreambooth-Stable-Diffusion\logs\<project_name_from_previous_step>\checkpoints\last-pruned.ckpt"
+   prompt1 = "portrait photograph of {token} {class_word} 35mm film vintage glass"
+
+   command = f'python scripts/stable_txt2img.py --ddim_eta 0.0 --n_samples 1 --n_iter 4 --scale 7.0 --ddim_steps 50 --ckpt "{pruned_model}" --prompt "{prompt1}"'
+   ```
+
+as you can see in the prompt we have "token_word classword as a xxxxxxxxx"
+
+generated images will be in `"C:\xxxxx\Dreambooth-Stable-Diffusion_2\outputs\txt2img-samples"`
 
 # <a name="text-vs-dreamb"></a>  Textual Inversion vs. Dreambooth
 The majority of the code in this repo was written by Rinon Gal et. al, the authors of the Textual Inversion research paper. Though a few ideas about regularization images and prior loss preservation (ideas from "Dreambooth") were added in, out of respect to both the MIT team and the Google researchers, I'm renaming this fork to:
