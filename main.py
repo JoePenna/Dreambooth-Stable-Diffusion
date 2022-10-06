@@ -655,17 +655,21 @@ if __name__ == "__main__":
         if not opt.reg_data_root:
             config.data.params.reg = None
         else:
+            config.data.params.reg.params.data_root = opt.reg_data_root
             config.data.params.reg.params.coarse_class_text = opt.class_word
             config.data.params.reg.params.placeholder_token = opt.token
+        
 
         if opt.class_word:
             config.data.params.train.params.coarse_class_text = opt.class_word
             config.data.params.validation.params.coarse_class_text = opt.class_word
 
+        config.data.params.train.params.data_root = opt.data_root
         config.data.params.train.params.placeholder_token = opt.token
         config.data.params.train.params.token_only = opt.token_only or not opt.class_word
 
         config.data.params.validation.params.placeholder_token = opt.token
+        config.data.params.validation.params.data_root = opt.data_root
 
         if opt.actual_resume:
             model = load_model_from_config(config, opt.actual_resume)
@@ -799,13 +803,8 @@ if __name__ == "__main__":
         trainer = Trainer.from_argparse_args(trainer_opt, **trainer_kwargs)
         trainer.logdir = logdir  ###
 
-        # data
-        config.data.params.train.params.data_root = opt.data_root
-        config.data.params.reg.params.data_root = opt.reg_data_root
-        config.data.params.validation.params.data_root = opt.data_root
         data = instantiate_from_config(config.data)
 
-        data = instantiate_from_config(config.data)
         # NOTE according to https://pytorch-lightning.readthedocs.io/en/latest/datamodules.html
         # calling these ourselves should not be necessary but it is.
         # lightning still takes care of proper multiprocessing though
