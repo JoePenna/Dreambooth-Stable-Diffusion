@@ -909,7 +909,7 @@ class LatentDiffusion(DDPM):
         return loss
     
     def training_step(self, batch, batch_idx):
-        if batch['caption']:
+        if 'caption' in batch
             # No Reg dataset for the training
             loss_train, loss_dict = self.shared_step(batch)
             loss = loss_train
@@ -1328,7 +1328,11 @@ class LatentDiffusion(DDPM):
         use_ddim = ddim_steps is not None
 
         log = dict()
-        batch = batch[0]
+        # We have a reg dataset, only pick the
+        # first dataset - the training one.
+        if not 'caption' in batch
+            batch = batch[0]
+
         z, c, x, xrec, xc = self.get_input(batch, self.first_stage_key,
                                            return_first_stage_outputs=True,
                                            force_c_encode=True,
