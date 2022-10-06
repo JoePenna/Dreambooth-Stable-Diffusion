@@ -1330,7 +1330,7 @@ class LatentDiffusion(DDPM):
         log = dict()
         # We have a reg dataset, only pick the
         # first dataset - the training one.
-        if isinstance(batch, dict):
+        if not isinstance(batch, dict):
             batch = batch[0]
 
         z, c, x, xrec, xc = self.get_input(batch, self.first_stage_key,
