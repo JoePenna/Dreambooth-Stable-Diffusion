@@ -291,8 +291,8 @@ class DataModuleFromConfig(pl.LightningDataModule):
             init_fn = worker_init_fn
         else:
             init_fn = None
-        train_set = self.datasets["train"]
 
+        train_set = self.datasets["train"]
         if 'reg' in self.datasets:
             reg_set = self.datasets["reg"]
             train_set = ConcatDataset(train_set, reg_set)

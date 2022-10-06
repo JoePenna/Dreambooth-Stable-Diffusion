@@ -909,13 +909,16 @@ class LatentDiffusion(DDPM):
         return loss
     
     def training_step(self, batch, batch_idx):
-        train_batch = batch[0]
-        reg_batch = batch[1]
-        
-        loss_train, loss_dict = self.shared_step(train_batch)
-        loss_reg, _ = self.shared_step(reg_batch)
-        
-        loss = loss_train + self.reg_weight * loss_reg
+        if batch['caption']:
+            # No Reg dataset for the training
+            loss_train, loss_dict = self.shared_step(train_batch)
+            loss = loss_train
+        else:
+            train_batch = batch[0]
+            reg_batch = batch[1]
+            loss_train, loss_dict = self.shared_step(train_batch)
+            loss_reg, _ = self.shared_step(reg_batch)
+            loss = loss_train + self.reg_weight * loss_reg
 
         self.log_dict(loss_dict, prog_bar=True,
                       logger=True, on_step=True, on_epoch=True)
