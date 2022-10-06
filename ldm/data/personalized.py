@@ -22,6 +22,7 @@ class PersonalizedBase(Dataset):
                  center_crop=False,
                  mixing_prob=0.25,
                  coarse_class_text="",
+                 token_only=False,
                  reg=False
                  ):
 
@@ -35,7 +36,7 @@ class PersonalizedBase(Dataset):
         self._length = self.num_images
 
         self.placeholder_token = placeholder_token
-
+        self.token_only = token_only
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
         self.mixing_prob = mixing_prob
@@ -71,7 +72,10 @@ class PersonalizedBase(Dataset):
         if self.reg:
             example["caption"] = self.coarse_class_text
         else:
-            example["caption"] = f"{self.placeholder_token} {self.coarse_class_text}"
+            example["caption"] = "{token}{coarse_class}".format(
+                token=self.placeholder_token,
+                coarse_class="" if self.token_only else f" {self.coarse_class_text}"
+            )
 
         # default to score-sde preprocessing
         img = np.array(image).astype(np.uint8)
