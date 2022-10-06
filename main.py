@@ -162,6 +162,13 @@ def get_parser(**parser_kwargs):
         required=True,
         help="Unique token you want to represent your trained model. Ex: firstNameLastName.")
 
+    parser.add_argument("--token_only", 
+        type=str2bool,
+        const=True,
+        default=False,
+        nargs="?",
+        help="Train only using the token and no class.")
+
     parser.add_argument("--actual_resume", 
         type=str,
         required=True,
@@ -641,12 +648,6 @@ if __name__ == "__main__":
         trainer_opt = argparse.Namespace(**trainer_config)
         lightning_config.trainer = trainer_config
 
-        # model
-
-        # config.model.params.personalization_config.params.init_word = opt.init_word
-        # config.model.params.personalization_config.params.embedding_manager_ckpt = opt.embedding_manager_ckpt
-        # config.model.params.personalization_config.params.placeholder_tokens = opt.placeholder_tokens
-
         # if opt.init_word:
         #     config.model.params.personalization_config.params.initializer_words[0] = opt.init_word
 
@@ -656,6 +657,7 @@ if __name__ == "__main__":
         config.data.params.validation.params.coarse_class_text = opt.class_word
 
         config.data.params.train.params.placeholder_token = opt.token
+        config.data.params.train.params.token_only = opt.token_only
         config.data.params.reg.params.placeholder_token = opt.token
         config.data.params.validation.params.placeholder_token = opt.token
 
