@@ -292,8 +292,11 @@ class DataModuleFromConfig(pl.LightningDataModule):
         else:
             init_fn = None
         train_set = self.datasets["train"]
-        reg_set = self.datasets["reg"]
-        concat_dataset = ConcatDataset(train_set, reg_set)
+
+        if 'reg' in self.datasets:
+            reg_set = self.datasets["reg"]
+            concat_dataset = ConcatDataset(train_set, reg_set)
+
         return DataLoader(concat_dataset, batch_size=self.batch_size,
                           num_workers=self.num_workers, shuffle=False if is_iterable_dataset else True,
                           worker_init_fn=init_fn)
