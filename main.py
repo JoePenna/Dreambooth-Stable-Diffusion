@@ -659,13 +659,12 @@ if __name__ == "__main__":
             config.data.params.reg.params.placeholder_token = opt.token
 
         if opt.class_word:
-        config.data.params.train.params.coarse_class_text = opt.class_word
-        config.data.params.validation.params.coarse_class_text = opt.class_word
+            config.data.params.train.params.coarse_class_text = opt.class_word
+            config.data.params.validation.params.coarse_class_text = opt.class_word
 
         config.data.params.train.params.placeholder_token = opt.token
-
         config.data.params.train.params.token_only = opt.token_only or not opt.class_word
-        
+
         config.data.params.validation.params.placeholder_token = opt.token
 
         if opt.actual_resume:
