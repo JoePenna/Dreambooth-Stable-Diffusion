@@ -194,9 +194,9 @@ def get_parser(**parser_kwargs):
         required=False,
         help="Match class_word to the category of images you want to train. Example: 'man', 'woman', or 'dog'.")
 
-    parser.add_argument("--init_word", 
+    parser.add_argument("--init_words", 
         type=str, 
-        help="Word to use as source for initial token embedding")
+        help="Comma separated list of words used to initialize the embeddigs for training.")
 
     return parser
 
@@ -650,6 +650,11 @@ if __name__ == "__main__":
             cpu = False
         trainer_opt = argparse.Namespace(**trainer_config)
         lightning_config.trainer = trainer_config
+
+        if opt.init_words:
+            config.model.params.personalization_config.params.initializer_words = [ 
+                    init_word.strip() for init_word in opt.init_words.split(',')
+                ]
 
         # if opt.init_word:
         #     config.model.params.personalization_config.params.initializer_words[0] = opt.init_word
