@@ -21,7 +21,7 @@ class PersonalizedBase(Dataset):
                  per_image_tokens=False,
                  center_crop=False,
                  mixing_prob=0.25,
-                 coarse_class_text="",
+                 coarse_class_text=None,
                  token_only=False,
                  reg=False
                  ):
@@ -69,12 +69,13 @@ class PersonalizedBase(Dataset):
         if not image.mode == "RGB":
             image = image.convert("RGB")
 
-        if self.reg:
+        example["caption"] = ""
+        if self.reg and self.coarse_class_text:
             example["caption"] = self.coarse_class_text
         else:
             example["caption"] = "{token}{coarse_class}".format(
                 token=self.placeholder_token,
-                coarse_class="" if self.token_only else f" {self.coarse_class_text}"
+                coarse_class="" if self.token_only or not self.coarse_class_text else f" {self.coarse_class_text}"
             )
 
         # default to score-sde preprocessing

@@ -181,7 +181,7 @@ def get_parser(**parser_kwargs):
     
     parser.add_argument("--reg_data_root", 
         type=str, 
-        required=True, 
+        required=False, 
         help="Path to directory with regularization images")
 
     parser.add_argument("--embedding_manager_ckpt", 
@@ -191,7 +191,7 @@ def get_parser(**parser_kwargs):
 
     parser.add_argument("--class_word", 
         type=str,
-        required=True,
+        required=False,
         help="Match class_word to the category of images you want to train. Example: 'man', 'woman', or 'dog'.")
 
     parser.add_argument("--init_words", 
@@ -291,10 +291,13 @@ class DataModuleFromConfig(pl.LightningDataModule):
             init_fn = worker_init_fn
         else:
             init_fn = None
+
         train_set = self.datasets["train"]
-        reg_set = self.datasets["reg"]
-        concat_dataset = ConcatDataset(train_set, reg_set)
-        return DataLoader(concat_dataset, batch_size=self.batch_size,
+        if 'reg' in self.datasets:
+            reg_set = self.datasets["reg"]
+            train_set = ConcatDataset(train_set, reg_set)
+
+        return DataLoader(train_set, batch_size=self.batch_size,
                           num_workers=self.num_workers, shuffle=False if is_iterable_dataset else True,
                           worker_init_fn=init_fn)
 
@@ -657,14 +660,24 @@ if __name__ == "__main__":
         #     config.model.params.personalization_config.params.initializer_words[0] = opt.init_word
 
         # Setup the token and class word to get passed to personalized.py
-        config.data.params.train.params.coarse_class_text = opt.class_word
-        config.data.params.reg.params.coarse_class_text = opt.class_word
-        config.data.params.validation.params.coarse_class_text = opt.class_word
+        if not opt.reg_data_root:
+            config.data.params.reg = None
+        else:
+            config.data.params.reg.params.data_root = opt.reg_data_root
+            config.data.params.reg.params.coarse_class_text = opt.class_word
+            config.data.params.reg.params.placeholder_token = opt.token
+        
 
+        if opt.class_word:
+            config.data.params.train.params.coarse_class_text = opt.class_word
+            config.data.params.validation.params.coarse_class_text = opt.class_word
+
+        config.data.params.train.params.data_root = opt.data_root
         config.data.params.train.params.placeholder_token = opt.token
-        config.data.params.train.params.token_only = opt.token_only
-        config.data.params.reg.params.placeholder_token = opt.token
+        config.data.params.train.params.token_only = opt.token_only or not opt.class_word
+
         config.data.params.validation.params.placeholder_token = opt.token
+        config.data.params.validation.params.data_root = opt.data_root
 
         if opt.actual_resume:
             model = load_model_from_config(config, opt.actual_resume)
@@ -798,13 +811,8 @@ if __name__ == "__main__":
         trainer = Trainer.from_argparse_args(trainer_opt, **trainer_kwargs)
         trainer.logdir = logdir  ###
 
-        # data
-        config.data.params.train.params.data_root = opt.data_root
-        config.data.params.reg.params.data_root = opt.reg_data_root
-        config.data.params.validation.params.data_root = opt.data_root
         data = instantiate_from_config(config.data)
 
-        data = instantiate_from_config(config.data)
         # NOTE according to https://pytorch-lightning.readthedocs.io/en/latest/datamodules.html
         # calling these ourselves should not be necessary but it is.
         # lightning still takes care of proper multiprocessing though
