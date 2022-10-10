@@ -1,10 +1,11 @@
 import os
+from typing import OrderedDict
 import numpy as np
 import PIL
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
-from captionizer import caption_from_path
+from captionizer import caption_from_path, generic_captions_from_path
 from captionizer import find_images
 
 per_img_token_list = [
@@ -59,6 +60,8 @@ class PersonalizedBase(Dataset):
                               }[interpolation]
         self.flip = transforms.RandomHorizontalFlip(p=flip_p)
         self.reg = reg
+        if self.reg and self.coarse_class_text:
+            self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
 
     def __len__(self):
         return self._length
@@ -73,7 +76,7 @@ class PersonalizedBase(Dataset):
 
         example["caption"] = ""
         if self.reg and self.coarse_class_text:
-            example["caption"] = self.coarse_class_text
+            example["caption"] = generic_captions_from_path(image_path, self.data_root, self.reg_tokens)
         else:
             example["caption"] = caption_from_path(image_path, self.data_root, self.coarse_class_text, self.placeholder_token)
 
