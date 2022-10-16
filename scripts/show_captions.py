@@ -7,7 +7,8 @@ def main(checkpoint_path):
         checkpoint = torch.load(checkpoint_path, map_location="cpu")
         if 'trained_captions' in checkpoint:
             captions = checkpoint['trained_captions']
-            print(f'Captions in {os.path.basename(checkpoint_path)}:')
+            global_step = checkpoint['global_step']
+            print(f'Captions in {os.path.basename(checkpoint_path)} [{global_step} Global Steps]:')
             for caption in captions:
                 print(f'\t"{caption}"')
         else:
