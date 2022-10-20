@@ -13,5 +13,4 @@ class CaptionSaverCallback(Callback):
             for image_path in data.image_paths
         ])
         trained_prompts = (list(prompts))
-        print(f"Saving training prompts: {trained_prompts}")
         checkpoint['trained_captions'] = trained_prompts
