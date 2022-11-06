@@ -10,7 +10,7 @@ args = parser.parse_args()
 ckpt = args.ckpt
 
 def prune_it(checkpoint_path):
-    print(f"Prunin' checkpoint from path: {checkpoint_path}")
+    print(f"Pruning checkpoint from path: {checkpoint_path}")
     size_initial = os.path.getsize(checkpoint_path)
     checkpoint = torch.load(checkpoint_path, map_location="cpu")
     pruned = prune_checkpoint(checkpoint)
