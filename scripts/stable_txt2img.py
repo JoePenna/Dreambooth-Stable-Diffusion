@@ -77,11 +77,14 @@ def check_safety(x_image):
     safety_checker_input = safety_feature_extractor(numpy_to_pil(x_image), return_tensors="pt")
     x_checked_image, has_nsfw_concept = safety_checker(images=x_image, clip_input=safety_checker_input.pixel_values)
     assert x_checked_image.shape[0] == len(has_nsfw_concept)
+    replaced_images = 0
     for i in range(len(has_nsfw_concept)):
         if has_nsfw_concept[i]:
             x_checked_image[i] = load_replacement(x_checked_image[i])
+            replaced_images += 1
 
-    print(f"Replaced {len(has_nsfw_concept)} NSFW images")
+    print(f"Replaced {replaced_images} NSFW images")
+
     return x_checked_image, has_nsfw_concept
 
 
@@ -207,7 +210,7 @@ def main():
     parser.add_argument(
         "--seed",
         type=int,
-        default=42,
+        default=-1,
         help="the seed (for reproducible sampling)",
     )
     parser.add_argument(
@@ -232,7 +235,11 @@ def main():
         opt.ckpt = "models/ldm/text2img-large/model.ckpt"
         opt.outdir = "outputs/txt2img-samples-laion400m"
 
-    seed_everything(opt.seed)
+    if opt.seed == -1 or opt.seed == 0:
+        seed_everything()
+    else:
+        seed_everything(opt.seed)
+
 
     config = OmegaConf.load(f"{opt.config}")
     model = load_model_from_config(config, f"{opt.ckpt}")
