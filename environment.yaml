@@ -6,11 +6,12 @@ dependencies:
   - python=3.8.10
   - pip=20.3
   - cudatoolkit=11.3
-  - pytorch=1.10.2
-  - torchvision=0.11.3
+  - pytorch=1.11.0
+  - torchvision=0.12.0
   - numpy=1.22.3
   - pip:
     - albumentations==1.1.0
+    - diffusers
     - opencv-python==4.2.0.34
     - pudb==2019.2
     - imageio==2.14.1
@@ -23,7 +24,7 @@ dependencies:
     - pillow==9.0.1
     - einops==0.4.1
     - torch-fidelity==0.3.0
-    - transformers==4.18.0
+    - transformers==4.19.2
     - torchmetrics==0.6.0
     - captionizer==1.0.1
     - kornia==0.6
