@@ -311,13 +311,12 @@ def main():
                         x_checked_image_torch = torch.from_numpy(x_checked_image).permute(0, 3, 1, 2)
 
                         used_seed = os.environ.get('PL_GLOBAL_SEED')
-                        print(f"USED SEED: {used_seed}\n")
 
                         if not opt.skip_save:
                             for x_sample in x_checked_image_torch:
                                 x_sample = 255. * rearrange(x_sample.cpu().numpy(), 'c h w -> h w c')
                                 img = Image.fromarray(x_sample.astype(np.uint8))
-                                img.save(os.path.join(outpath, f"{opt.prompt[:120]}_{base_count:05}.png"))
+                                img.save(os.path.join(outpath, f"{used_seed}_{base_count:05}.png"))
 
                                 base_count += 1
 
