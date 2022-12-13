@@ -160,7 +160,7 @@ def main():
         type=str,
         default="models/ldm/stable-diffusion-v1/model.ckpt",
         help="path to checkpoint of model",
-    )    
+    )
     parser.add_argument(
         "--seed",
         type=int,
@@ -177,8 +177,8 @@ def main():
 
 
     parser.add_argument(
-        "--embedding_path", 
-        type=str, 
+        "--embedding_path",
+        type=str,
         help="Path to a pre-trained embedding manager checkpoint")
 
     opt = parser.parse_args()
@@ -260,7 +260,7 @@ def main():
                             for x_sample in x_samples_ddim:
                                 x_sample = 255. * rearrange(x_sample.cpu().numpy(), 'c h w -> h w c')
                                 Image.fromarray(x_sample.astype(np.uint8)).save(
-                                    os.path.join(sample_path, f"{base_count:05}.jpg"))
+                                    os.path.join(outpath, f"{opt.prompt[:120]}_{base_count:05}.png"))
                                 base_count += 1
 
                         if not opt.skip_grid:
@@ -270,17 +270,14 @@ def main():
                     # additionally, save as grid
                     grid = torch.stack(all_samples, 0)
                     grid = rearrange(grid, 'n b c h w -> (n b) c h w')
-                    
-                    for i in range(grid.size(0)):
-                        save_image(grid[i, :, :, :], os.path.join(outpath,opt.prompt+'_{}.png'.format(i)))
                     grid = make_grid(grid, nrow=n_rows)
 
-                    # to image
                     grid = 255. * rearrange(grid, 'c h w -> h w c').cpu().numpy()
-                    Image.fromarray(grid.astype(np.uint8)).save(os.path.join(outpath, f'{prompt.replace(" ", "-")}-{grid_count:04}.jpg'))
+                    Image.fromarray(grid.astype(np.uint8)).save(
+                        os.path.join(outpath, f'{opt.prompt[:120].replace(" ", "-")}-{grid_count:04}.jpg'))
                     grid_count += 1
-                    
-                    
+
+
 
                 toc = time.time()
 

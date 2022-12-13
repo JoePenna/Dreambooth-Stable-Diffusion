@@ -6,3 +6,5 @@ train.bat
 __pycache__
 */**/__pycache__
 logs
+
+.idea
