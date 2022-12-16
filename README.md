@@ -37,7 +37,7 @@ Now, if you wanna try to do this... please read the warnings below first:
 
 - Let's respect the hard work and creativity of people who have spent years honing their skills.
   - This iteration of Dreambooth was specifically designed for digital artists to train their own characters and styles into a Stable Diffusion model, as well as for people to train their own likenesses. My main goal is to make a tool for filmmakers to interact with concept artists that they've hired -- to generate the seed of an initial idea, so that they can then communicate visually. Meant to be used by filmmakers, concept artists, comic book designers, etc.
-  - For moral, ethical (and potentially legal) reasons, I strongly discourage training someone else's art into the model unless you've obtained explicit permission, or they've made a public statement about this technology. For similar reasons, I recommend against using artists' names in AI prompts.
+  - One day, there'll be a Stable Diffussion trained on perfect datasets. In the meantime, for moral / ethical / potentially legal reasons, I strongly discourage training someone else's art into these model (unless you've obtained explicit permission, or they've made a public statement about this technology). For similar reasons, I recommend against using artists' names in your prompts. Don't put the people who made this possible out of the job!
 
 - Onto the technical side:
   - You can now run this on a GPU with 24GB of VRAM (e.g. 3090). Training will be slower, and you'll need to be sure this is the *only* program running.
