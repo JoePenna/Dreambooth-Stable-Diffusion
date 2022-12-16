@@ -771,6 +771,9 @@ if __name__ == "__main__":
             "cuda_callback": {
                 "target": "main.CUDACallback"
             },
+            "captions_callback": {
+                "target": "ldm.modules.callbacks.captions.CaptionSaverCallback"
+            }
         }
         if version.parse(pl.__version__) >= version.parse('1.4.0'):
             default_callbacks_cfg.update({'checkpoint_callback': modelckpt_cfg})
