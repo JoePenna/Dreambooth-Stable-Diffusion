@@ -1,6 +1,7 @@
 def prune_checkpoint(old_state):
     print(f"Pruning Checkpoint")
     pruned_checkpoint = dict()
+    print(f"Checkpoint Keys: {old_state.keys()}")
     for key in old_state.keys():
         if key != "optimizer_states":
             pruned_checkpoint[key] = old_state[key]
