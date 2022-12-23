@@ -10,7 +10,7 @@ args = parser.parse_args()
 ckpt = args.ckpt
 
 def prune_it(p, keep_only_ema=False):
-    print(f"prunin' in path: {p}")
+    print(f"Pruning in path: {p}")
     size_initial = os.path.getsize(p)
     nsd = dict()
     sd = torch.load(p, map_location="cpu")

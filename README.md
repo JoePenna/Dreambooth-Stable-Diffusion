@@ -34,12 +34,12 @@ This is no longer my repo. This is the people-who-wanna-see-Dreambooth-on-SD-wor
 Now, if you wanna try to do this... please read the warnings below first:
 
 ### **WARNING!**
-- **This is bleeding edge stuff**... there is currently no easy way to run this. This repo is based on a repo based on another repo.
-  - At the moment, it takes a LOT of effort to create something that's basically duct tape and bubble gum -- but eventually works SUPER well.
-  - Step in, please! Don't let that scare ya -- but please know that you're wading through the jungle at night, with no torch...
 
-- Unfreezing the model takes a lot of juice.
-  - ~~You're gonna need an A6000 / A40 / A100 (or similar top-of-the-line thousands-of-dollars GPU).~~
+- Let's respect the hard work and creativity of people who have spent years honing their skills.
+  - This iteration of Dreambooth was specifically designed for digital artists to train their own characters and styles into a Stable Diffusion model, as well as for people to train their own likenesses. My main goal is to make a tool for filmmakers to interact with concept artists that they've hired -- to generate the seed of an initial idea, so that they can then communicate visually. Meant to be used by filmmakers, concept artists, comic book designers, etc.
+  - One day, there'll be a Stable Diffussion trained on perfect datasets. In the meantime, for moral / ethical / potentially legal reasons, I strongly discourage training someone else's art into these model (unless you've obtained explicit permission, or they've made a public statement about this technology). For similar reasons, I recommend against using artists' names in your prompts. Don't put the people who made this possible out of the job!
+
+- Onto the technical side:
   - You can now run this on a GPU with 24GB of VRAM (e.g. 3090). Training will be slower, and you'll need to be sure this is the *only* program running.
   - If, like myself, you don't happen to own one of those, I'm including a Jupyter notebook here to help you run it on a rented cloud computing platform. 
   - It's currently tailored to [runpod.io](https://runpod.io?ref=n8yfwyum), but can work on [vast.ai](#vast-ai-setup) / etc.
