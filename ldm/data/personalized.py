@@ -1,9 +1,12 @@
 import os
+from typing import OrderedDict
 import numpy as np
 import PIL
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
+from captionizer import caption_from_path, generic_captions_from_path
+from captionizer import find_images
 
 per_img_token_list = [
     'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
@@ -28,8 +31,7 @@ class PersonalizedBase(Dataset):
 
         self.data_root = data_root
 
-        self.image_paths = [os.path.join(
-            self.data_root, file_path) for file_path in os.listdir(self.data_root)]
+        self.image_paths = find_images(self.data_root)
 
         # self._length = len(self.image_paths)
         self.num_images = len(self.image_paths)
@@ -58,25 +60,25 @@ class PersonalizedBase(Dataset):
                               }[interpolation]
         self.flip = transforms.RandomHorizontalFlip(p=flip_p)
         self.reg = reg
+        if self.reg and self.coarse_class_text:
+            self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
 
     def __len__(self):
         return self._length
 
     def __getitem__(self, i):
         example = {}
-        image = Image.open(self.image_paths[i % self.num_images])
+        image_path = self.image_paths[i % self.num_images]
+        image = Image.open(image_path)
 
         if not image.mode == "RGB":
             image = image.convert("RGB")
 
         example["caption"] = ""
         if self.reg and self.coarse_class_text:
-            example["caption"] = self.coarse_class_text
+            example["caption"] = generic_captions_from_path(image_path, self.data_root, self.reg_tokens)
         else:
-            example["caption"] = "{token}{coarse_class}".format(
-                token=self.placeholder_token,
-                coarse_class="" if self.token_only or not self.coarse_class_text else f" {self.coarse_class_text}"
-            )
+            example["caption"] = caption_from_path(image_path, self.data_root, self.coarse_class_text, self.placeholder_token)
 
         # default to score-sde preprocessing
         img = np.array(image).astype(np.uint8)
