@@ -1,4 +1,4 @@
-import argparse, os, sys, glob
+import argparse, os, sys, glob, uuid
 import torch
 import numpy as np
 from omegaconf import OmegaConf
@@ -50,23 +50,23 @@ def main():
         type=str,
         nargs="?",
         default="a painting of a virus monster playing guitar",
-        help="the prompt to render"
+        help="the prompt to render",
     )
     parser.add_argument(
         "--outdir",
         type=str,
         nargs="?",
         help="dir to write results to",
-        default="outputs/txt2img-samples"
+        default="outputs/txt2img-samples",
     )
     parser.add_argument(
         "--skip_grid",
-        action='store_true',
+        action="store_true",
         help="do not save a grid, only individual samples. Helpful when evaluating lots of samples",
     )
     parser.add_argument(
         "--skip_save",
-        action='store_true',
+        action="store_true",
         help="do not save individual samples. For speed measurements.",
     )
     parser.add_argument(
@@ -77,17 +77,17 @@ def main():
     )
     parser.add_argument(
         "--plms",
-        action='store_true',
+        action="store_true",
         help="use plms sampling",
     )
     parser.add_argument(
         "--laion400m",
-        action='store_true',
+        action="store_true",
         help="uses the LAION400M model",
     )
     parser.add_argument(
         "--fixed_code",
-        action='store_true',
+        action="store_true",
         help="if enabled, uses the same starting code across samples ",
     )
     parser.add_argument(
@@ -160,7 +160,7 @@ def main():
         type=str,
         default="models/ldm/stable-diffusion-v1/model.ckpt",
         help="path to checkpoint of model",
-    )    
+    )
     parser.add_argument(
         "--seed",
         type=int,
@@ -172,14 +172,14 @@ def main():
         type=str,
         help="evaluate at this precision",
         choices=["full", "autocast"],
-        default="autocast"
+        default="autocast",
     )
 
-
     parser.add_argument(
-        "--embedding_path", 
-        type=str, 
-        help="Path to a pre-trained embedding manager checkpoint")
+        "--embedding_path",
+        type=str,
+        help="Path to a pre-trained embedding manager checkpoint",
+    )
 
     opt = parser.parse_args()
 
@@ -193,7 +193,7 @@ def main():
 
     config = OmegaConf.load(f"{opt.config}")
     model = load_model_from_config(config, f"{opt.ckpt}")
-    #model.embedding_manager.load(opt.embedding_path)
+    # model.embedding_manager.load(opt.embedding_path)
 
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model = model.to(device)
@@ -226,9 +226,11 @@ def main():
 
     start_code = None
     if opt.fixed_code:
-        start_code = torch.randn([opt.n_samples, opt.C, opt.H // opt.f, opt.W // opt.f], device=device)
+        start_code = torch.randn(
+            [opt.n_samples, opt.C, opt.H // opt.f, opt.W // opt.f], device=device
+        )
 
-    precision_scope = autocast if opt.precision=="autocast" else nullcontext
+    precision_scope = autocast if opt.precision == "autocast" else nullcontext
     with torch.no_grad():
         with precision_scope("cuda"):
             with model.ema_scope():
@@ -243,24 +245,31 @@ def main():
                             prompts = list(prompts)
                         c = model.get_learned_conditioning(prompts)
                         shape = [opt.C, opt.H // opt.f, opt.W // opt.f]
-                        samples_ddim, _ = sampler.sample(S=opt.ddim_steps,
-                                                         conditioning=c,
-                                                         batch_size=opt.n_samples,
-                                                         shape=shape,
-                                                         verbose=False,
-                                                         unconditional_guidance_scale=opt.scale,
-                                                         unconditional_conditioning=uc,
-                                                         eta=opt.ddim_eta,
-                                                         x_T=start_code)
+                        samples_ddim, _ = sampler.sample(
+                            S=opt.ddim_steps,
+                            conditioning=c,
+                            batch_size=opt.n_samples,
+                            shape=shape,
+                            verbose=False,
+                            unconditional_guidance_scale=opt.scale,
+                            unconditional_conditioning=uc,
+                            eta=opt.ddim_eta,
+                            x_T=start_code,
+                        )
 
                         x_samples_ddim = model.decode_first_stage(samples_ddim)
-                        x_samples_ddim = torch.clamp((x_samples_ddim + 1.0) / 2.0, min=0.0, max=1.0)
+                        x_samples_ddim = torch.clamp(
+                            (x_samples_ddim + 1.0) / 2.0, min=0.0, max=1.0
+                        )
 
                         if not opt.skip_save:
                             for x_sample in x_samples_ddim:
-                                x_sample = 255. * rearrange(x_sample.cpu().numpy(), 'c h w -> h w c')
+                                x_sample = 255.0 * rearrange(
+                                    x_sample.cpu().numpy(), "c h w -> h w c"
+                                )
                                 Image.fromarray(x_sample.astype(np.uint8)).save(
-                                    os.path.join(sample_path, f"{base_count:05}.jpg"))
+                                    os.path.join(sample_path, f"{base_count:05}.jpg")
+                                )
                                 base_count += 1
 
                         if not opt.skip_grid:
@@ -269,23 +278,29 @@ def main():
                 if not opt.skip_grid:
                     # additionally, save as grid
                     grid = torch.stack(all_samples, 0)
-                    grid = rearrange(grid, 'n b c h w -> (n b) c h w')
-                    
+                    grid = rearrange(grid, "n b c h w -> (n b) c h w")
+
+                    batch_uuid = uuid.uuid4()
                     for i in range(grid.size(0)):
-                        save_image(grid[i, :, :, :], os.path.join(outpath,opt.prompt[:180]+'_{}.png'.format(i)))
+                        file_name = f"{batch_uuid.hex[:10]}_{opt.prompt[:30]}_{i}.png"
+                        save_image(grid[i, :, :, :], os.path.join(outpath, file_name))
                     grid = make_grid(grid, nrow=n_rows)
 
                     # to image
-                    grid = 255. * rearrange(grid, 'c h w -> h w c').cpu().numpy()
-                    Image.fromarray(grid.astype(np.uint8)).save(os.path.join(outpath, f'{prompt[:180].replace(" ", "-")}-{grid_count:04}.jpg'))
+                    grid = 255.0 * rearrange(grid, "c h w -> h w c").cpu().numpy()
+                    Image.fromarray(grid.astype(np.uint8)).save(
+                        os.path.join(
+                            outpath,
+                            f'{batch_uuid.hex[:10]}-{prompt.replace(" ", "-")[:30]}-{grid_count:04}.jpg',
+                        )
+                    )
                     grid_count += 1
-                    
-                    
 
                 toc = time.time()
 
-    print(f"Your samples are ready and waiting for you here: \n{outpath} \n"
-          f" \nEnjoy.")
+    print(
+        f"Your samples are ready and waiting for you here: \n{outpath} \n" f" \nEnjoy."
+    )
 
 
 if __name__ == "__main__":

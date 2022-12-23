@@ -1,4 +1,3 @@
-
 .DS_Store
 gen.bat
 gen_ref.bat
@@ -6,3 +5,4 @@ train.bat
 __pycache__
 */**/__pycache__
 logs
+.ipynb_checkpoints
