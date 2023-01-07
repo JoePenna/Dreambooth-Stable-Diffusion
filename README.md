@@ -57,9 +57,25 @@ Now, if you wanna try to do this... please read the warnings below first:
 
 # <a name="setup"></a> Setup
 ## <a name="easy-runpod-instructions"></a> Easy RunPod Instructions
+
+**Note (1/7/23) Runpod recently upgraded their base Docker image which breaks this repo by default. None of the Youtube videos are up to date, yet. Follow along the typical Runpod Youtube videos/tutorials, with the following changes:**
+
+From within the My Pods page,
+
+- Click the menu button (to the left of the purple play button)
+- Click Edit Pod
+- Update "Docker Image Name" to say `runpod/pytorch`. It shouldn't have any numbers or letters after it.
+- Click Save.
+- Restart your pod
+
+### Carry on with the rest of the guide:
+
 - Sign up for RunPod. Feel free to use my [referral link here](https://runpod.io?ref=n8yfwyum), so that I don't have to pay for it (but you do).
-- Click **Deploy** on either `SECURE CLOUD` or `COMMUNITY CLOUD`
-- Follow these video instructions here:
+- After logging in, select either `SECURE CLOUD` or `COMMUNITY CLOUD`
+- Make sure you find a "High" interent speed so you're not wasting time and money on slow downloads
+- Select something with at **least 24gb VRAM** like RTX 3090 or RTX A5000
+
+- Follow these video instructions below:
 
 [![VIDEO INSTRUCTIONS](https://img.youtube.com/vi/7m__xadX0z0/0.jpg)](https://www.youtube.com/watch?v=7m__xadX0z0#t=5m33.1s)
 
