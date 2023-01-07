@@ -58,7 +58,7 @@ Now, if you wanna try to do this... please read the warnings below first:
 # <a name="setup"></a> Setup
 ## <a name="easy-runpod-instructions"></a> Easy RunPod Instructions
 
-**Note**: (1/7/23) Runpod recently upgraded their base Docker image which breaks this repo by default. None of the Youtube videos are up to date, yet. Follow along the typical Runpod Youtube videos/tutorials, with the following changes:
+**Note (1/7/23) Runpod recently upgraded their base Docker image which breaks this repo by default. None of the Youtube videos are up to date, yet. Follow along the typical Runpod Youtube videos/tutorials, with the following changes:**:
 
 From within the My Pods page,
 
