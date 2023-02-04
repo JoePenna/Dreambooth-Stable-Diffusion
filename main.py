@@ -198,6 +198,16 @@ def get_parser(**parser_kwargs):
         type=str, 
         help="Comma separated list of words used to initialize the embeddigs for training.")
 
+    parser.add_argument(
+        "--flip_p",
+        type=float,
+        required=False,
+        default=0.5,
+        help="Flip Percentage "
+             "Example: if set to 0.5, will flip (mirror) your training images 50% of the time."
+             "This helps expand your dataset without needing to include more training images."
+             "This can lead to worse results for face training since most people's faces are not perfectly symmetrical.")
+
     return parser
 
 
@@ -675,6 +685,7 @@ if __name__ == "__main__":
         config.data.params.train.params.data_root = opt.data_root
         config.data.params.train.params.placeholder_token = opt.token
         config.data.params.train.params.token_only = opt.token_only or not opt.class_word
+        config.data.params.train.params.flip_p = opt.flip_p
 
         config.data.params.validation.params.placeholder_token = opt.token
         config.data.params.validation.params.data_root = opt.data_root
