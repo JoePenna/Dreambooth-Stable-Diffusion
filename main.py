@@ -210,9 +210,9 @@ def get_parser(**parser_kwargs):
 
     parser.add_argument(
         "--learning_rate",
-        type=str,
+        type=float,
         required=False,
-        default="1.0e-06",
+        default=1.0e-06,
         help="Set the learning rate. Defaults to 1.0e-06 (0.000001).  Accepts scientific notation.")
 
     parser.add_argument(
@@ -707,6 +707,7 @@ if __name__ == "__main__":
 
         if opt.save_every_x_steps > 0:
             lightning_config.modelcheckpoint.params.every_n_train_steps = opt.save_every_x_steps
+            lightning_config.callbacks.metrics_over_trainsteps_checkpoint.params.every_n_train_steps = opt.save_every_x_steps
             lightning_config.callbacks.image_logger.params.batch_frequency = opt.save_every_x_steps
 
 
@@ -929,5 +930,5 @@ if __name__ == "__main__":
             os.makedirs(os.path.split(dst)[0], exist_ok=True)
             os.rename(logdir, dst)
         if trainer.global_rank == 0:
-            print("Training complete. max_training_steps reached or we blew up.")
+            print("🔹Training complete🔹. max_training_steps reached or we blew up.")
             # print(trainer.profiler.summary())
