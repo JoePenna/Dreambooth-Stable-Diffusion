@@ -108,6 +108,11 @@ lightning:
     params:
       every_n_train_steps: 500
   callbacks:
+    metrics_over_trainsteps_checkpoint:
+      target: pytorch_lightning.callbacks.ModelCheckpoint
+      params:
+        every_n_train_steps: 0
+        save_weights_only: True
     image_logger:
       target: main.ImageLogger
       params:
