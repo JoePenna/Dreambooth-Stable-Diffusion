@@ -656,8 +656,6 @@ if __name__ == "__main__":
         configs = [OmegaConf.load(cfg) for cfg in opt.base]
         cli = OmegaConf.from_dotlist(unknown)
         config = OmegaConf.merge(*configs, cli)
-        model_config = config.pop("model", OmegaConf.create())
-        data_config = config.pop("data", OmegaConf.create())
 
         lightning_config = config.pop("lightning", OmegaConf.create())
 
@@ -680,32 +678,32 @@ if __name__ == "__main__":
         lightning_config.trainer = trainer_config
 
         if opt.init_words:
-            model_config.params.personalization_config.params.initializer_words = [
+            config.model.params.personalization_config.params.initializer_words = [
                     init_word.strip() for init_word in opt.init_words.split(',')
                 ]
 
         # if opt.init_word:
-        #     model_config.params.personalization_config.params.initializer_words[0] = opt.init_word
+        #     config.model.params.personalization_config.params.initializer_words[0] = opt.init_word
 
         # Setup the token and class word to get passed to personalized.py
         if not opt.reg_data_root:
-            data_config.params.reg = None
+            config.data.params.reg = None
         else:
-            data_config.params.reg.params.data_root = opt.reg_data_root
-            data_config.params.reg.params.coarse_class_text = opt.class_word
-            data_config.params.reg.params.placeholder_token = opt.token
+            config.data.params.reg.params.data_root = opt.reg_data_root
+            config.data.params.reg.params.coarse_class_text = opt.class_word
+            config.data.params.reg.params.placeholder_token = opt.token
         
 
         if opt.class_word:
-            data_config.params.train.params.coarse_class_text = opt.class_word
-            data_config.params.validation.params.coarse_class_text = opt.class_word
+            config.data.params.train.params.coarse_class_text = opt.class_word
+            config.data.params.validation.params.coarse_class_text = opt.class_word
 
-        data_config.params.train.params.data_root = opt.data_root
-        data_config.params.train.params.placeholder_token = opt.token
-        data_config.params.train.params.token_only = opt.token_only or not opt.class_word
-        data_config.params.train.params.flip_p = opt.flip_p
-        data_config.params.validation.params.placeholder_token = opt.token
-        data_config.params.validation.params.data_root = opt.data_root
+        config.data.params.train.params.data_root = opt.data_root
+        config.data.params.train.params.placeholder_token = opt.token
+        config.data.params.train.params.token_only = opt.token_only or not opt.class_word
+        config.data.params.train.params.flip_p = opt.flip_p
+        config.data.params.validation.params.placeholder_token = opt.token
+        config.data.params.validation.params.data_root = opt.data_root
 
         if opt.save_every_x_steps > 0:
             lightning_config.modelcheckpoint.params.every_n_train_steps = opt.save_every_x_steps
@@ -713,13 +711,13 @@ if __name__ == "__main__":
 
 
         if opt.learning_rate:
-            model_config.base_learning_rate = opt.learning_rate
-            model_config.params.model_lr = opt.learning_rate
+            config.model.base_learning_rate = opt.learning_rate
+            config.model.params.model_lr = opt.learning_rate
 
         if opt.actual_resume:
             model = load_model_from_config(config, opt.actual_resume)
         else:
-            model = instantiate_from_config(model_config)
+            model = instantiate_from_config(config.model)
 
         # trainer and callbacks
         trainer_kwargs = dict()
@@ -848,7 +846,7 @@ if __name__ == "__main__":
         trainer = Trainer.from_argparse_args(trainer_opt, **trainer_kwargs)
         trainer.logdir = logdir  ###
 
-        data = instantiate_from_config(data_config)
+        data = instantiate_from_config(config.data)
 
         # NOTE according to https://pytorch-lightning.readthedocs.io/en/latest/datamodules.html
         # calling these ourselves should not be necessary but it is.
@@ -860,7 +858,7 @@ if __name__ == "__main__":
             print(f"{k}, {data.datasets[k].__class__.__name__}, {len(data.datasets[k])}")
 
         # configure learning rate
-        bs, base_lr = data_config.params.batch_size, model_config.base_learning_rate
+        bs, base_lr = config.data.params.batch_size, config.model.base_learning_rate
         if not cpu:
             ngpu = len(lightning_config.trainer.gpus.strip(",").split(','))
         else:
