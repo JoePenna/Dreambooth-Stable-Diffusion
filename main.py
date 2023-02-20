@@ -212,7 +212,7 @@ def get_parser(**parser_kwargs):
         "--learning_rate",
         type=float,
         required=False,
-        default=1.0e-06,
+        default=None,
         help="Set the learning rate. Defaults to 1.0e-06 (0.000001).  Accepts scientific notation.")
 
     parser.add_argument(
@@ -711,7 +711,7 @@ if __name__ == "__main__":
             lightning_config.callbacks.image_logger.params.batch_frequency = opt.save_every_x_steps
 
 
-        if opt.learning_rate:
+        if opt.learning_rate is not None:
             config.model.base_learning_rate = opt.learning_rate
             config.model.params.model_lr = opt.learning_rate
 
