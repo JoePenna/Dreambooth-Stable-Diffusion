@@ -49,7 +49,7 @@ class JoePennaDreamboothConfigSchemaV1:
                f"{self.token}_token_" \
                f"{self.class_word}_class_word.ckpt".replace(" ", "_")
 
-def parse_config_file(config_file_path):
+def parse_config_file(config_file_path) -> JoePennaDreamboothConfigSchemaV1:
     # parse the config file "joepenna-dreambooth-configs/active-config.json"
     if not os.path.exists(config_file_path):
         print(f"{config_file_path} not found.", file=sys.stderr)
@@ -125,5 +125,5 @@ def save_config_file_v1(
     shutil.copy(project_config_filename, f"{config_save_path}/{project_config_filename}")
     shutil.move(project_config_filename, f"{config_save_path}/active-config.json")
 
-    print(f"✅ {project_config_filename} successfully generated.  Proceed to training.")
     print(project_config_json)
+    print(f"✅ {project_config_filename} successfully generated.  Proceed to training.")

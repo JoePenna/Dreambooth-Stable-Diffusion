@@ -11,3 +11,4 @@ logs
 /Stable-Diffusion-Regularization-Images-*/
 /regularization_images/
 *.ckpt
+/joepenna-dreambooth-configs/
