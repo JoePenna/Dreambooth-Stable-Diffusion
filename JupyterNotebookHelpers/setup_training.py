@@ -4,7 +4,6 @@ import sys
 import shutil
 from ipywidgets import widgets, Layout, HBox
 from git import Repo
-from ctypes import Union
 from JupyterNotebookHelpers.joe_penna_dreambooth_config import save_config_file_v1
 from JupyterNotebookHelpers.download_model import SDModelOption
 
@@ -130,6 +129,15 @@ class SetupTraining:
         )
         self.build_input_and_label(self.save_every_x_steps_input, "Change to save intermediate checkpoints")
 
+        self.regularization_images_progress_bar_widget = widgets.IntProgress(
+            value=0,
+            min=0,
+            max=0,
+            description='',
+            bar_style='info',
+            orientation='horizontal'
+        )
+
         self.save_form_button = widgets.Button(
             description="Save",
             disabled=False,
@@ -236,8 +244,17 @@ class SetupTraining:
         else:
             print(f"✅ Regularization images for {dataset} already exist. Skipping download...")
 
-    def log_git_progress(self, op_code:int, cur_count:Union[str,float], max_count:Union[str, float, None], message:str=''):
-        print(f"{op_code} {cur_count} {max_count} {message}")
+    def log_git_progress(self, op_code:int, cur_count, max_count, message:str=''):
+        if op_code == 33: # Start, display the widget
+            display(self.regularization_images_progress_bar_widget)
+
+        if op_code == 32 or op_code == 256: # Fetching remote or Stage remote, update the widget
+            self.regularization_images_progress_bar_widget.max = int(max_count)
+            self.regularization_images_progress_bar_widget.value = int(cur_count)
+            self.regularization_images_progress_bar_widget.description = f"{message}"
+
+        if op_code == 258: # Stage remote end, hide the widget
+            self.regularization_images_progress_bar_widget.close()
 
     def handle_training_images(self, uploaded_images):
         if os.path.exists(self.training_images_save_path):
