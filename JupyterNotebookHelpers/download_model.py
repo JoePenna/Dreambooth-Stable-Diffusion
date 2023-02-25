@@ -12,11 +12,10 @@ class SDModelOption:
     def download(self):
         if self.is_valid():
             print(f"Downloading '{self.repo_id}/{self.filename}'")
-            downloaded_model_path = hf_hub_download(
+            return hf_hub_download(
                 repo_id=self.repo_id,
                 filename=self.filename
             )
-            return downloaded_model_path
         else:
             raise Exception(f"Model not valid. repo_id: {self.repo_id} or filename: {self.filename} are missing or invalid.")
 
