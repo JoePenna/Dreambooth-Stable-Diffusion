@@ -1,4 +1,3 @@
-from IPython.core.display_functions import display
 from IPython.display import clear_output
 import shutil
 from huggingface_hub import hf_hub_download

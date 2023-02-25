@@ -1,4 +1,3 @@
-from IPython.core.display_functions import display
 from IPython.display import clear_output
 from ipywidgets import widgets, Layout
 class InstallerProgressBar:

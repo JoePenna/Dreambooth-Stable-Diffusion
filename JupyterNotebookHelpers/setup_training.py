@@ -1,11 +1,11 @@
-from IPython.core.display_functions import display
 from IPython.display import clear_output
 import os
 import sys
 import shutil
-from JupyterNotebookHelpers.joe_penna_dreambooth_config import save_config_file_v1
 from ipywidgets import widgets, Layout, HBox
 from git import Repo
+from ctypes import Union
+from JupyterNotebookHelpers.joe_penna_dreambooth_config import save_config_file_v1
 from JupyterNotebookHelpers.download_model import SDModelOption
 
 class SetupTraining:
@@ -216,8 +216,8 @@ class SetupTraining:
         repo_name = f"Stable-Diffusion-Regularization-Images-{dataset}"
         regularization_images_git_folder = f"./{repo_name}"
         if not os.path.exists(regularization_images_git_folder):
-            print(f"Downloading regularization images for {dataset}")
-            Repo.clone_from(f"https://github.com/djbielejeski/{repo_name}.git", repo_name)
+            print(f"Downloading regularization images for {dataset}. Please wait...")
+            Repo.clone_from(f"https://github.com/djbielejeski/{repo_name}.git", repo_name, progress=self.log_git_progress)
 
             print(f"✅ Regularization images for {dataset} downloaded successfully.")
             regularization_images_root_folder = "regularization_images"
@@ -235,6 +235,10 @@ class SetupTraining:
 
         else:
             print(f"✅ Regularization images for {dataset} already exist. Skipping download...")
+
+    def log_git_progress(self, op_code:int, cur_count:Union[str,float], max_count:Union[str, float, None], message:str=''):
+        print(f"{op_code} {cur_count} {max_count} {message}")
+
     def handle_training_images(self, uploaded_images):
         if os.path.exists(self.training_images_save_path):
             # remove existing images
