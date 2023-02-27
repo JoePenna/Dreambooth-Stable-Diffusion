@@ -1,10 +1,10 @@
 # Experimental Branch
 I am testing breaking changes in this repo.  Fork/clone at your own risk.
 
-> python -m venv venv
-> venv\Scripts\activate.bat
-> ...do stuff...
-> deactivate
+- `python -m venv venv`
+- `venv\Scripts\activate.bat`
+- `...do stuff...`
+- `deactivate`
 
 # Index
 
