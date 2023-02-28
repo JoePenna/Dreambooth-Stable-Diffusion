@@ -208,6 +208,21 @@ def get_parser(**parser_kwargs):
              "This helps expand your dataset without needing to include more training images."
              "This can lead to worse results for face training since most people's faces are not perfectly symmetrical.")
 
+    parser.add_argument(
+        "--learning_rate",
+        type=float,
+        required=False,
+        default=None,
+        help="Set the learning rate. Defaults to 1.0e-06 (0.000001).  Accepts scientific notation.")
+
+    parser.add_argument(
+        "--save_every_x_steps",
+        type=int,
+        required=False,
+        default=-1,
+        help="Saves a checkpoint every x steps")
+
+
     return parser
 
 
@@ -641,6 +656,7 @@ if __name__ == "__main__":
         configs = [OmegaConf.load(cfg) for cfg in opt.base]
         cli = OmegaConf.from_dotlist(unknown)
         config = OmegaConf.merge(*configs, cli)
+
         lightning_config = config.pop("lightning", OmegaConf.create())
 
         # merge trainer cli with config
@@ -662,7 +678,7 @@ if __name__ == "__main__":
         lightning_config.trainer = trainer_config
 
         if opt.init_words:
-            config.model.params.personalization_config.params.initializer_words = [ 
+            config.model.params.personalization_config.params.initializer_words = [
                     init_word.strip() for init_word in opt.init_words.split(',')
                 ]
 
@@ -686,9 +702,18 @@ if __name__ == "__main__":
         config.data.params.train.params.placeholder_token = opt.token
         config.data.params.train.params.token_only = opt.token_only or not opt.class_word
         config.data.params.train.params.flip_p = opt.flip_p
-
         config.data.params.validation.params.placeholder_token = opt.token
         config.data.params.validation.params.data_root = opt.data_root
+
+        if opt.save_every_x_steps > 0:
+            lightning_config.modelcheckpoint.params.every_n_train_steps = opt.save_every_x_steps
+            lightning_config.callbacks.metrics_over_trainsteps_checkpoint.params.every_n_train_steps = opt.save_every_x_steps
+            lightning_config.callbacks.image_logger.params.batch_frequency = opt.save_every_x_steps
+
+
+        if opt.learning_rate is not None:
+            config.model.base_learning_rate = opt.learning_rate
+            config.model.params.model_lr = opt.learning_rate
 
         if opt.actual_resume:
             model = load_model_from_config(config, opt.actual_resume)
@@ -905,5 +930,5 @@ if __name__ == "__main__":
             os.makedirs(os.path.split(dst)[0], exist_ok=True)
             os.rename(logdir, dst)
         if trainer.global_rank == 0:
-            print("Training complete. max_training_steps reached or we blew up.")
+            print("🔹Training complete🔹. max_training_steps reached or we blew up.")
             # print(trainer.profiler.summary())
