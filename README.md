@@ -3,7 +3,9 @@ I am testing breaking changes in this repo.  Fork/clone at your own risk.
 
 - `python -m venv venv`
 - `venv\Scripts\activate.bat`
-- `...do stuff...`
+- `pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117`
+- `pip install -r requirements.txt`
+- `python "main.py" --base "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\configs\stable-diffusion\v1-finetune_unfrozen.yaml" -t --actual_resume "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\v1-5-pruned-emaonly-pruned.ckpt" --reg_data_root "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\regularization_images" -n "test" --gpus 0, --data_root "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\training_images" --max_training_steps 100 --class_word "david" --token "davidbielejeski" --no-test --flip_p 0`
 - `deactivate`
 
 # Index

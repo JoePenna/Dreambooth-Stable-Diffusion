@@ -1,4 +1,3 @@
-
 .DS_Store
 gen.bat
 gen_ref.bat
@@ -6,3 +5,9 @@ train.bat
 __pycache__
 */**/__pycache__
 logs
+venv
+.idea
+regularization_images
+training_images
+*.egg-info
+*.ckpt

@@ -3,30 +3,28 @@ channels:
   - pytorch
   - defaults
 dependencies:
-  - python=3.8.10
-  - pip=20.3
+  - python=3.10
+  - pip=22.2.2
   - cudatoolkit=11.3
-  - pytorch=1.10.2
-  - torchvision=0.11.3
-  - numpy=1.22.3
+  - pytorch=1.12.1
+  - torchvision=0.13.1
+  - numpy=1.23.1
   - pip:
     - albumentations==1.1.0
     - opencv-python==4.2.0.34
     - pudb==2019.2
-    - imageio==2.14.1
-    - imageio-ffmpeg==0.4.7
-    - pytorch-lightning==1.5.9
+    - pytorch-lightning==1.7.6
     - omegaconf==2.1.1
-    - test-tube>=0.7.5
-    - streamlit>=0.73.1
     - setuptools==59.5.0
-    - pillow==9.0.1
+    - pillow==9.4.0
     - einops==0.4.1
     - torch-fidelity==0.3.0
-    - transformers==4.18.0
-    - torchmetrics==0.6.0
+    - transformers==4.25.1
+    - torchmetrics==0.11.1
     - captionizer==1.0.1
-    - kornia==0.6
+    - kornia==0.6.7
+    - diffusers[training]==0.3.0
+    - captionizer==1.0.1
     - -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
     - -e git+https://github.com/openai/CLIP.git@main#egg=clip
     - -e .
