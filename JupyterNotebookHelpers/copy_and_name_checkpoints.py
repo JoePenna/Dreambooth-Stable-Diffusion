@@ -32,10 +32,10 @@ class CopyAndNameCheckpoints:
             checkpoint_paths = []
             steps = []
             if config.save_every_x_steps == 0:
-                checkpoint_paths.append(f"{latest_training_directory}/checkpoints/last.ckpt")
+                checkpoint_paths.append(f"{latest_training_directory}/ckpts/last.ckpt")
                 steps.append(str(config.max_training_steps))
             else:
-                checkpoints_directory = f"{latest_training_directory}/checkpoints/trainstep_checkpoints"
+                checkpoints_directory = f"{latest_training_directory}/ckpts/trainstep_ckpts"
                 file_paths = glob.glob(f"{checkpoints_directory}/*")
 
                 for i, original_file_name in enumerate(file_paths):
