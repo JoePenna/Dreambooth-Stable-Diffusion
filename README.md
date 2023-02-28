@@ -1,15 +1,23 @@
 # Experimental Branch
-I am testing breaking changes in this repo.  Fork/clone at your own risk.
 
-- `python -m venv venv`
-- `venv\Scripts\activate.bat`
-- `pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117`
-- `pip install -r requirements.txt`
-- `python "main.py" --project_name "David_Test" --training_model "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\v1-5-pruned-emaonly-pruned.ckpt" --regularization_images "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\regularization_images" --name "david_test" --training_images "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\training_images" --max_training_steps 100 --class_word "david" --token "davidbielejeski" --flip_p 0 --learning_rate 2.0e-06 --save_every_x_steps 25`
-- `deactivate`
+### Running Locally
 
-`COLAB`
-`!python main.py --project_name "David_Test" --training_model "/content/Dreambooth-Stable-Diffusion/model.ckpt" --regularization_images "/content/Dreambooth-Stable-Diffusion/regularization_images" --name "david_test" --training_images "/content/Dreambooth-Stable-Diffusion/training_images" --max_training_steps 100 --class_word "david" --token "davidbielejeski" --flip_p 0 --learning_rate 2.0e-06 --save_every_x_steps 25`
+#### Setup & Install
+```cmd
+cmd> python -m venv venv
+cmd> venv\Scripts\activate.bat
+cmd> pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117
+cmd> pip install -r requirements.txt
+```
+
+#### Run
+`cmd> python "main.py" --project_name "ProjectName" --training_model "C:\v1-5-pruned-emaonly-pruned.ckpt" --regularization_images "C:\regularization_images" --training_images "C:\training_images" --max_training_steps 2000 --class_word "person" --token "zwx" --flip_p 0 --learning_rate 1.0e-06 --save_every_x_steps 250`
+
+#### Cleanup
+```cmd
+cmd> deactivate 
+```
+
 # Index
 
 - [Notes by Joe Penna](#notes-by-joe-penna)
