@@ -41,7 +41,7 @@ class callbacks():
         return {
             "target": "pytorch_lightning.callbacks.ModelCheckpoint",
             "params": {
-                "dirpath": dreambooth_global_variables.LogConfigDirectory(),
+                "dirpath": dreambooth_global_variables.LogCheckpointDirectory(),
                 "filename": "{epoch:06}",
                 "verbose": True,
                 "save_last": True,

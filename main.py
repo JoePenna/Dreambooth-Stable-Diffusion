@@ -209,17 +209,9 @@ if __name__ == "__main__":
                 trainer.save_checkpoint(ckpt_path)
 
 
-        def divein(*args, **kwargs):
-            if trainer.global_rank == 0:
-                import pudb;
-                pudb.set_trace()
-
-
         import signal
-
         # Windows fix
         signal.signal(signal.SIGTERM, melk)
-        signal.signal(signal.SIGTERM, divein)
 
         # run the training
         try:
