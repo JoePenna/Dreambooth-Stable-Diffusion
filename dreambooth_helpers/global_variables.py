@@ -7,17 +7,15 @@ class DreamboothGlobalVariables():
     log_directory_name = "logs"
     checkpoint_output_directory_name = "ckpts"
     checkpoint_intermediate_steps_directory_name = "trainstep_ckpts"
-    config_directory_name = "config"
+    config_directory_name = "configs"
 
     # Set in the setup function
     training_folder_name = ""
     is_debug = False
-    save_intermediate_checkpoint_starting_at_x_steps = None
 
     def setup(self):
         self.training_folder_name = f"{self.now}_{args.project_name}"
         self.is_debug = args.debug
-        self.save_intermediate_checkpoint_starting_at_x_steps = args.save_intermediate_checkpoints_starting_at_x_steps
         self.CreateLogFolders()
     def LogDirectory(self):
         return os.path.join(self.log_directory_name, self.training_folder_name)

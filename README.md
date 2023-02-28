@@ -5,9 +5,11 @@ I am testing breaking changes in this repo.  Fork/clone at your own risk.
 - `venv\Scripts\activate.bat`
 - `pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117`
 - `pip install -r requirements.txt`
-- `python "main.py" --base "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\configs\stable-diffusion\v1-finetune_unfrozen.yaml" -t --actual_resume "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\v1-5-pruned-emaonly-pruned.ckpt" --reg_data_root "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\regularization_images" -n "test" --gpus 0, --data_root "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\training_images" --max_training_steps 100 --class_word "david" --token "davidbielejeski" --no-test --flip_p 0`
+- `python "main.py" --project_name "David_Test" --training_model "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\v1-5-pruned-emaonly-pruned.ckpt" --regularization_images "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\regularization_images" --name "david_test" --training_images "C:\Users\David\Dev\david-bielejeski-Dreambooth-Stable-Diffusion\training_images" --max_training_steps 100 --class_word "david" --token "davidbielejeski" --flip_p 0 --learning_rate 2.0e-06 --save_every_x_steps 25`
 - `deactivate`
 
+`COLAB`
+`!python main.py --project_name "David_Test" --training_model "/content/Dreambooth-Stable-Diffusion/model.ckpt" --regularization_images "/content/Dreambooth-Stable-Diffusion/regularization_images" --name "david_test" --training_images "/content/Dreambooth-Stable-Diffusion/training_images" --max_training_steps 100 --class_word "david" --token "davidbielejeski" --flip_p 0 --learning_rate 2.0e-06 --save_every_x_steps 25`
 # Index
 
 - [Notes by Joe Penna](#notes-by-joe-penna)

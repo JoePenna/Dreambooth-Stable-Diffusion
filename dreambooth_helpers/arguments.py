@@ -24,7 +24,6 @@ class DreamboothArguments():
     flip_p: float = 0.5
     learning_rate: float = None
     save_every_x_steps: int = -1
-    save_intermediate_checkpoints_starting_at_x_steps: int = None
 
     def parse_arguments(self):
         parser = self.get_parser()
@@ -58,7 +57,7 @@ class DreamboothArguments():
         self.flip_p = opt.flip_p
         self.learning_rate = opt.learning_rate
         self.save_every_x_steps = opt.save_every_x_steps
-        self.save_intermediate_checkpoints_starting_at_x_steps = opt.save_intermediate_checkpoints_starting_at_x_steps
+
     def get_parser(self, **parser_kwargs):
         def str2bool(v):
             if isinstance(v, bool):
@@ -169,17 +168,6 @@ class DreamboothArguments():
             required=False,
             default=self.save_every_x_steps,
             help="Saves a checkpoint every x steps"
-        )
-
-        parser.add_argument(
-            "--save_intermediate_checkpoints_starting_at_x_steps",
-            type=int,
-            default=self.save_intermediate_checkpoints_starting_at_x_steps,
-            required=False,
-            help="Start saving a checkpoint at or after (x) steps. Used in conjunction with '--save_every_x_steps'."
-                 "Example: If you have set '--save_every_x_steps' to 250"
-                 "and set '--save_intermediate_checkpoint_starting_at_x_steps' to 1000"
-                 "checkpoints will begin saving at 1000 steps, and save every 250 steps thereafter"
         )
 
         return parser

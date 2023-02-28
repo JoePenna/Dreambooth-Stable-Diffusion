@@ -1,5 +1,3 @@
-from omegaconf import OmegaConf
-
 from ldm.util import instantiate_from_config
 from dreambooth_helpers.arguments import dreambooth_arguments as args
 from dreambooth_helpers.global_variables import dreambooth_global_variables
@@ -9,7 +7,7 @@ from ldm.modules.pruningckptio import PruningCheckpointIO
 class callbacks():
     def metrics_over_trainsteps_checkpoint(self, intermediate_step_save: bool) -> dict:
         if intermediate_step_save:
-            return OmegaConf.merge({
+            return {
                 "target": 'pytorch_lightning.callbacks.ModelCheckpoint',
                 "params": {
                     "dirpath": dreambooth_global_variables.LogIntermediateCheckpointsDirectory(),
@@ -19,28 +17,28 @@ class callbacks():
                     "every_n_train_steps": args.save_every_x_steps,
                     "save_weights_only": True
                 }
-            }, OmegaConf.create())
+            }
         else:
-            return OmegaConf.merge({
+            return {
                 "target": "pytorch_lightning.callbacks.ModelCheckpoint",
                 "params": {
                     "every_n_train_steps": args.save_every_x_steps,
                     "save_weights_only": True,
                 }
-            }, OmegaConf.create())
+            }
 
     def image_logger(self) -> dict:
-        return OmegaConf.merge({
+        return {
             "target": "dreambooth_helpers.callback_helpers.ImageLogger",
             "params": {
                 "batch_frequency": 500 if args.save_every_x_steps <= 0 else args.save_every_x_steps,
                 "max_images": 8,
                 "increase_log_steps": False,
             }
-        }, OmegaConf.create())
+        }
 
     def model_checkpoint(self) -> dict:
-        return OmegaConf.merge({
+        return {
             "target": "pytorch_lightning.callbacks.ModelCheckpoint",
             "params": {
                 "dirpath": dreambooth_global_variables.LogConfigDirectory(),
@@ -49,10 +47,10 @@ class callbacks():
                 "save_last": True,
                 "every_n_train_steps": args.save_every_x_steps,
             }
-        }, OmegaConf.create())
+        }
 
     def setup_callback(self, model_data_config, lightning_config) -> dict:
-        return OmegaConf.merge({
+        return {
             "target": "dreambooth_helpers.callback_helpers.SetupCallback",
             "params": {
                 "resume": "",
@@ -63,25 +61,25 @@ class callbacks():
                 "config": model_data_config,
                 "lightning_config": lightning_config,
             }
-        }, OmegaConf.create())
+        }
 
     def learning_rate_logger(self) -> dict:
-        return OmegaConf.merge({
+        return {
             "target": "pytorch_lightning.callbacks.LearningRateMonitor",
             "params": {
                 "logging_interval": "step",
                 # "log_momentum": True
             }
-        }, OmegaConf.create())
+        }
 
     def cuda_callback(self) -> dict:
-        return OmegaConf.merge({
+        return {
             "target": "dreambooth_helpers.callback_helpers.CUDACallback"
-        }, OmegaConf.create())
+        }
 
 
 def get_dreambooth_model_config() -> dict:
-    return OmegaConf.merge({
+    return {
         "base_learning_rate": args.learning_rate,
         "target": "ldm.models.diffusion.ddpm.LatentDiffusion",
         "params": {
@@ -158,11 +156,11 @@ def get_dreambooth_model_config() -> dict:
             },
             "ckpt_path": args.training_model
         }
-    }, OmegaConf.create())
+    }
 
 
 def get_dreambooth_data_config() -> dict:
-    data_config = OmegaConf.merge({
+    data_config = {
         "target": "main.DataModuleFromConfig",
         "params": {
             "batch_size": 1,
@@ -208,22 +206,22 @@ def get_dreambooth_data_config() -> dict:
                 }
             }
         }
-    }, OmegaConf.create())
+    }
 
     return data_config
 
 
 def get_dreambooth_model_data_config(model_config, data_config, lightning_config) -> dict:
-    return OmegaConf.merge({
+    return {
         "model": model_config,
         "data": data_config,
         "lightning": lightning_config,
-    }, OmegaConf.create())
+    }
 
 
 def get_dreambooth_lightning_config() -> dict:
     cb = callbacks()
-    lightning_config = OmegaConf.merge({
+    lightning_config = {
         "modelcheckpoint": {
             "params": {
                 "every_n_train_steps": 500 if args.save_every_x_steps <= 0 else args.save_every_x_steps,
@@ -239,7 +237,7 @@ def get_dreambooth_lightning_config() -> dict:
             "accumulate_grad_batches": 1,
             "max_steps": args.max_training_steps,
         }
-    }, OmegaConf.create())
+    }
 
     if args.save_every_x_steps > 0:
         lightning_config["callbacks"]["metrics_over_trainsteps_checkpoint"] = cb.metrics_over_trainsteps_checkpoint(intermediate_step_save=False)
@@ -249,16 +247,18 @@ def get_dreambooth_lightning_config() -> dict:
 
 def get_dreambooth_trainer_config(model, lightning_config) -> dict:
     cb = callbacks()
-    trainer_config = OmegaConf.merge({
+    trainer_config = {
         "logger": {
             "target": "pytorch_lightning.loggers.CSVLogger",
             "params": {
-                "name": dreambooth_global_variables.training_folder_name,
+                "name": "CSVLogger",
                 "save_dir": dreambooth_global_variables.LogDirectory(),
             }
         },
         "checkpoint_callback": cb.model_checkpoint()
-    }, lightning_config["trainer"])
+    }
+
+    trainer_config.update(lightning_config["trainer"])
 
     if hasattr(model, "monitor"):
         trainer_config["checkpoint_callback"]["params"]["monitor"] = model.monitor
@@ -282,7 +282,7 @@ def get_dreambooth_trainer_kwargs(trainer_config, callbacks_config) -> dict:
 
 def get_dreambooth_callbacks_config(model_data_config, lightning_config) -> dict:
     cb = callbacks()
-    callbacks_config = OmegaConf.merge({
+    callbacks_config = {
         "setup_callback": cb.setup_callback(
             model_data_config=model_data_config,
             lightning_config=lightning_config,
@@ -291,7 +291,7 @@ def get_dreambooth_callbacks_config(model_data_config, lightning_config) -> dict
         "learning_rate_logger": cb.learning_rate_logger(),
         "cuda_callback": cb.cuda_callback(),
         "checkpoint_callback": cb.model_checkpoint(),
-    }, OmegaConf.create())
+    }
 
     if args.save_every_x_steps > 0:
         callbacks_config["metrics_over_trainsteps_checkpoint"] = cb.metrics_over_trainsteps_checkpoint(intermediate_step_save=True)

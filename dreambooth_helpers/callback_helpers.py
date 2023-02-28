@@ -116,7 +116,7 @@ class ImageLogger(Callback):
             self.log_local(pl_module.logger.save_dir, split, images,
                            pl_module.global_step, pl_module.current_epoch, batch_idx)
 
-            print("TODO: LOG IMAGE")
+            # print("TODO: LOG IMAGE")
             # logger_log_images = self.logger_log_images.get(logger, lambda *args, **kwargs: None)
             # logger_log_images(pl_module, images, pl_module.global_step, split)
 
@@ -138,7 +138,6 @@ class ImageLogger(Callback):
         if not self.disabled and (pl_module.global_step > 0 or self.log_first_step):
             self.log_img(pl_module, batch, batch_idx, split="train")
 
-    # def on_validation_batch_end(self, trainer, pl_module, outputs, batch, batch_idx):
     def on_validation_end(self, trainer: "pl.Trainer", pl_module: "pl.LightningModule", *args) -> None:
         pass
         # if not self.disabled and pl_module.global_step > 0:
