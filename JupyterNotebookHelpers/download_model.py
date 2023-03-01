@@ -61,17 +61,19 @@ class DownloadModel:
         self.model_options.observe(self.model_options_changed)
 
         self.model_repo_id_input = widgets.Text(
-            placeholder='runwayml/stable-diffusion-v1-5',
-            description='Repo Id: ',
+            placeholder=self.model_definitions[0].repo_id,
+            description='Selected Repo Id: ',
             value='',
+            disabled=True,
             style=style,
             layout=layout,
         )
 
         self.model_filename_input = widgets.Text(
-            placeholder='v1-5-pruned-emaonly.ckpt',
-            description='Filename: ',
+            placeholder=self.model_definitions[0].filename,
+            description='Selected Filename: ',
             value='',
+            disabled=True,
             style=style,
             layout=layout,
         )
@@ -89,12 +91,6 @@ class DownloadModel:
         self.output = widgets.Output()
 
     def show_form(self):
-        clear_output()
-        display(self.model_options)
-        display(self.download_model_button, self.output)
-
-    def show_manual_inputs_form(self):
-        clear_output()
         display(self.model_options)
         display(self.model_repo_id_input)
         display(self.model_filename_input)
@@ -127,15 +123,26 @@ class DownloadModel:
                 print("❌ Specified model is invalid.")
 
 
-    def model_options_changed(self, b):
+    def model_options_changed(self, *args):
         if self.last_selected_index is not self.model_options.value:
             self.last_selected_index = self.model_options.value
             selected_model = self.get_selected_model()
 
             if selected_model.manual:
-                self.show_manual_inputs_form()
+                self.model_repo_id_input.disabled = False
+                self.model_repo_id_input.placeholder = 'runwayml/stable-diffusion-v1-5'
+                self.model_repo_id_input.description = "Enter Repo Id: "
+                self.model_filename_input.disabled = False
+                self.model_filename_input.placeholder = 'v1-5-pruned-emaonly.ckpt'
+                self.model_filename_input.description = "Enter Filename: "
             else:
-                self.show_form()
+                self.model_repo_id_input.disabled = True
+                self.model_repo_id_input.placeholder = selected_model.repo_id
+                self.model_repo_id_input.description = "Selected Repo Id: "
+                self.model_filename_input.disabled = True
+                self.model_filename_input.placeholder = selected_model.filename
+                self.model_filename_input.description = "Selected Filename: "
+
 
     def get_selected_model(self) -> SDModelOption:
         return self.model_definitions[self.model_options.value]
