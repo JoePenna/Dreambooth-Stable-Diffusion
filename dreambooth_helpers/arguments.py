@@ -27,7 +27,7 @@ class DreamboothArguments():
 
     flip_p: float = 0.5
     learning_rate: float = None
-    save_every_x_steps: int = -1
+    save_every_x_steps: int = 0
     gpu: int = 0
 
     def parse_arguments(self):
@@ -74,10 +74,12 @@ class DreamboothArguments():
 
         self.learning_rate = opt.learning_rate
         self.save_every_x_steps = opt.save_every_x_steps
+        if self.save_every_x_steps < 0:
+            raise Exception("--save_every_x_steps: must be greater than or equal to 0")
 
         self.gpu = opt.gpu
 
-        self.validate_gpu_vram()
+        #self.validate_gpu_vram()
 
     def validate_gpu_vram(self):
         def convert_size(size_bytes):
