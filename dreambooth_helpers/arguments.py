@@ -1,8 +1,12 @@
 import argparse
+import math
+import os
+
+import torch
 from pytorch_lightning import seed_everything
 
-class DreamboothArguments():
 
+class DreamboothArguments():
     project_name: str
     debug: bool = False
     seed: int = 23
@@ -24,6 +28,7 @@ class DreamboothArguments():
     flip_p: float = 0.5
     learning_rate: float = None
     save_every_x_steps: int = -1
+    gpu: int = 0
 
     def parse_arguments(self):
         parser = self.get_parser()
@@ -40,23 +45,57 @@ class DreamboothArguments():
         seed_everything(self.seed)
 
         self.max_training_steps = opt.max_training_steps
+        if self.max_training_steps <= 0:
+            raise Exception("'--max_training_steps': Required. Must be > 0.")
+
         self.token = opt.token
         self.token_only = opt.token_only
 
         # used to be --actual_resume
         self.training_model = opt.training_model
+        if not os.path.exists(self.training_model):
+            raise Exception(f"'--training_model': Required. Could not find '{self.training_model}'.")
 
         # used to be --data_root
         self.training_images = opt.training_images
+        if not os.path.exists(self.training_images):
+            raise Exception(f"'--training_images': Required. Could not find '{self.training_images}'.")
 
         # used to be --reg_data_root
         self.regularization_images = opt.regularization_images
+        if self.regularization_images is not None and not os.path.exists(self.regularization_images):
+            raise Exception(f"'--regularization_images': Could not find '{self.regularization_images}'.")
 
         self.class_word = opt.class_word
 
         self.flip_p = opt.flip_p
+        if self.flip_p < 0 or self.flip_p > 1:
+            raise Exception("--flip_p: must be between 0 and 1")
+
         self.learning_rate = opt.learning_rate
         self.save_every_x_steps = opt.save_every_x_steps
+
+        self.gpu = opt.gpu
+
+        self.validate_gpu_vram()
+
+    def validate_gpu_vram(self):
+        def convert_size(size_bytes):
+            if size_bytes == 0:
+                return "0B"
+            size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+            i = int(math.floor(math.log(size_bytes, 1024)))
+            p = math.pow(1024, i)
+            s = round(size_bytes / p, 2)
+            return "%s %s" % (s, size_name[i])
+
+            # Check total available GPU memory
+
+        gpu_vram = int(torch.cuda.get_device_properties(self.gpu).total_memory)
+        print(f"gpu_vram: {convert_size(gpu_vram)}")
+        twenty_one_gigabytes = 22548578304
+        if gpu_vram < twenty_one_gigabytes:
+            raise Exception(f"VRAM: Currently unable to run on less than {convert_size(twenty_one_gigabytes)} of VRAM.")
 
     def get_parser(self, **parser_kwargs):
         def str2bool(v):
@@ -117,10 +156,10 @@ class DreamboothArguments():
         )
 
         parser.add_argument(
-           "--training_model",
-           type=str,
-           required=True,
-           help="Path to model to train (model.ckpt)"
+            "--training_model",
+            type=str,
+            required=True,
+            help="Path to model to train (model.ckpt)"
         )
 
         parser.add_argument(
@@ -168,6 +207,14 @@ class DreamboothArguments():
             required=False,
             default=self.save_every_x_steps,
             help="Saves a checkpoint every x steps"
+        )
+
+        parser.add_argument(
+            "--gpu",
+            type=int,
+            default=self.gpu,
+            required=False,
+            help="Specify a GPU other than 0 to use for training.  Multi-GPU support is not currently implemented."
         )
 
         return parser

@@ -232,7 +232,7 @@ def get_dreambooth_lightning_config() -> dict:
         },
         "trainer": {
             "accelerator": "gpu",
-            "devices": "0,",
+            "devices": f"{args.gpu},",
             "benchmark": True,
             "accumulate_grad_batches": 1,
             "max_steps": args.max_training_steps,

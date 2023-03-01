@@ -1,10 +1,10 @@
 # Experimental Branch
 
-### Running Locally
+## Running Locally
 
-#### Setup & Install
+### Setup & Install - Virtual Environment
 ```cmd
-cmd> python -m venv venv
+cmd> python -m venv dreambooth_joepenna
 cmd> venv\Scripts\activate.bat
 cmd> pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117
 cmd> pip install -r requirements.txt
@@ -16,6 +16,23 @@ cmd> pip install -r requirements.txt
 #### Cleanup
 ```cmd
 cmd> deactivate 
+```
+
+### Setup & Install - Conda
+
+Windows: Install miniconda3 for Python 3.10
+
+```cmd
+cmd> conda env create -f environment.yaml
+cmd> conda activate dreambooth_joepenna
+```
+
+##### Run
+`cmd> python "main.py" --project_name "ProjectName" --training_model "C:\v1-5-pruned-emaonly-pruned.ckpt" --regularization_images "C:\regularization_images" --training_images "C:\training_images" --max_training_steps 2000 --class_word "person" --token "zwx" --flip_p 0 --learning_rate 1.0e-06 --save_every_x_steps 250`
+
+##### Cleanup
+```cmd
+cmd> conda deactivate 
 ```
 
 # Index

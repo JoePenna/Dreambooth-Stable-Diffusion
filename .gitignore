@@ -16,3 +16,4 @@ venv
 /training_images/
 *.ckpt
 /joepenna-dreambooth-configs/
+/src/

@@ -31,7 +31,6 @@ class DreamboothGlobalVariables():
     def CreateLogFolders(self):
         os.makedirs(self.LogDirectory(), exist_ok=True)
         os.makedirs(self.LogCheckpointDirectory(), exist_ok=True)
-        os.makedirs(self.LogIntermediateCheckpointsDirectory(), exist_ok=True)
         os.makedirs(self.LogConfigDirectory(), exist_ok=True)
 
 

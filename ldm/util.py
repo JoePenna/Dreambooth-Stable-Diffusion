@@ -4,11 +4,12 @@ from collections import abc
 from inspect import isfunction
 from queue import Queue
 from threading import Thread
-from dreambooth_helpers.global_variables import dreambooth_global_variables
 
 import numpy as np
 import torch
 from PIL import Image, ImageDraw, ImageFont
+
+from dreambooth_helpers.global_variables import dreambooth_global_variables
 
 
 def log_txt_as_img(wh, xc, size=10):
@@ -80,8 +81,18 @@ def load_model_from_config(config, ckpt, verbose=False):
     pl_sd = torch.load(ckpt, map_location="cpu")
     sd = pl_sd["state_dict"]
     config["model"]["params"]["ckpt_path"] = ckpt
+
+    print("")
+    print("")
+    print("---------------------------")
+    print("<THIS IS LIKELY NOT AN ERROR>")
     model = instantiate_from_config(config["model"])
     m, u = model.load_state_dict(sd, strict=False)
+    print("</THIS IS LIKELY NOT AN ERROR>")
+    print("---------------------------")
+    print("")
+    print("")
+
     if len(m) > 0 and verbose and dreambooth_global_variables.is_debug:
         print("missing keys:")
         print(m)
