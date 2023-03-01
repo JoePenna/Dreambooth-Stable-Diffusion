@@ -79,7 +79,7 @@ class DreamboothArguments():
 
         self.gpu = opt.gpu
 
-        #self.validate_gpu_vram()
+        self.validate_gpu_vram()
 
     def validate_gpu_vram(self):
         def convert_size(size_bytes):
