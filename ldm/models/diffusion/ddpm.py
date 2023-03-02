@@ -1076,11 +1076,7 @@ class LatentDiffusion(DDPM):
         return mean_flat(kl_prior) / np.log(2.0)
 
     def p_losses(self, x_start, cond, t, noise=None):
-        print("")
-        print("Adding offset noise")
-        print("")
-        noise = add_offset_noise(default(noise, lambda: torch.randn_like(x_start)), x_start, self.device)
-
+        noise = default(noise, lambda: torch.randn_like(x_start))
         x_noisy = self.q_sample(x_start=x_start, t=t, noise=noise)
         model_output = self.apply_model(x_noisy, t, cond)
 
@@ -1251,7 +1247,8 @@ class LatentDiffusion(DDPM):
         device = self.betas.device
         b = shape[0]
         if x_T is None:
-            img = torch.randn(shape, device=device)
+            # Apply offset noise
+            img = torch.randn(shape, device=device) + 0.1 * torch.randn(shape[0], shape[1], 1, 1, device=device)
         else:
             img = x_T
 
