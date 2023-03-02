@@ -1250,7 +1250,7 @@ class LatentDiffusion(DDPM):
             # Apply offset noise
             img = torch.randn(shape, device=device) + 0.1 * torch.randn(shape[0], shape[1], 1, 1, device=device)
         else:
-            img = x_T
+            img = x_T + 0.1 * torch.randn(shape[0], shape[1], 1, 1, device=device)
 
         intermediates = [img]
         if timesteps is None:
