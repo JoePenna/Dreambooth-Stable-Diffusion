@@ -24,7 +24,7 @@ from ldm.util import log_txt_as_img, exists, default, ismap, isimage, mean_flat,
 from ldm.modules.ema import LitEma
 from ldm.modules.distributions.distributions import normal_kl, DiagonalGaussianDistribution
 from ldm.models.autoencoder import VQModelInterface, IdentityFirstStage, AutoencoderKL
-from ldm.modules.diffusionmodules.util import make_beta_schedule, extract_into_tensor, noise_like
+from ldm.modules.diffusionmodules.util import make_beta_schedule, extract_into_tensor, noise_like, add_offset_noise
 from ldm.models.diffusion.ddim import DDIMSampler
 
 
@@ -1076,7 +1076,11 @@ class LatentDiffusion(DDPM):
         return mean_flat(kl_prior) / np.log(2.0)
 
     def p_losses(self, x_start, cond, t, noise=None):
-        noise = default(noise, lambda: torch.randn_like(x_start))
+        print("")
+        print("Adding offset noise")
+        print("")
+        noise = add_offset_noise(default(noise, lambda: torch.randn_like(x_start)), x_start, self.device)
+
         x_noisy = self.q_sample(x_start=x_start, t=t, noise=noise)
         model_output = self.apply_model(x_noisy, t, cond)
 
