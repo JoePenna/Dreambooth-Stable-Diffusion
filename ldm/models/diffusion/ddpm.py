@@ -24,7 +24,7 @@ from ldm.util import log_txt_as_img, exists, default, ismap, isimage, mean_flat,
 from ldm.modules.ema import LitEma
 from ldm.modules.distributions.distributions import normal_kl, DiagonalGaussianDistribution
 from ldm.models.autoencoder import VQModelInterface, IdentityFirstStage, AutoencoderKL
-from ldm.modules.diffusionmodules.util import make_beta_schedule, extract_into_tensor, noise_like, add_offset_noise
+from ldm.modules.diffusionmodules.util import make_beta_schedule, extract_into_tensor, noise_like
 from ldm.models.diffusion.ddim import DDIMSampler
 
 
@@ -1247,10 +1247,9 @@ class LatentDiffusion(DDPM):
         device = self.betas.device
         b = shape[0]
         if x_T is None:
-            # Apply offset noise
-            img = torch.randn(shape, device=device) + 0.1 * torch.randn(shape[0], shape[1], 1, 1, device=device)
+            img = torch.randn(shape, device=device)
         else:
-            img = x_T + 0.1 * torch.randn(shape[0], shape[1], 1, 1, device=device)
+            img = x_T
 
         intermediates = [img]
         if timesteps is None:

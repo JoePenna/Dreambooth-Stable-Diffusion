@@ -262,12 +262,12 @@ class HybridConditioner(nn.Module):
         return {'c_concat': [c_concat], 'c_crossattn': [c_crossattn]}
 
 
-# Using info from https://www.crosslabs.org//blog/diffusion-with-offset-noise
-def add_offset_noise(noise, shape, device, multiplier=0.1):
-    return noise + multiplier * torch.randn(shape[0], shape[1], 1, 1, device=device)
-
-
-def noise_like(shape, device, repeat=False):
+def noise_like(shape, device, repeat=False, add_offset_noise=True):
     repeat_noise = lambda: torch.randn((1, *shape[1:]), device=device).repeat(shape[0], *((1,) * (len(shape) - 1)))
-    noise = lambda: torch.randn(shape, device=device)
+
+    # Using info from https://www.crosslabs.org//blog/diffusion-with-offset-noise
+    offset_noise = 0.1 * torch.randn(shape[0], shape[1], 1, 1, device=device) if add_offset_noise else 0
+
+    noise = lambda: torch.randn(shape, device=device) + offset_noise
+
     return repeat_noise() if repeat else noise()
