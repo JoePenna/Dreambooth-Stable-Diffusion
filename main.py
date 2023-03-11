@@ -9,11 +9,12 @@ import torch
 from pytorch_lightning.trainer import Trainer
 from torch.utils.data import random_split, DataLoader
 
-import dreambooth_helpers.dreambooth_configurations as db_cfg
+import dreambooth_helpers.dreambooth_trainer_configurations as db_cfg
 from dreambooth_helpers.arguments import parse_arguments
 from dreambooth_helpers.dataset_helpers import WrappedDataset, ConcatDataset
 from dreambooth_helpers.global_variables import dreambooth_global_variables
-from dreambooth_helpers.training_config import JoePennaDreamboothConfigSchemaV1
+from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
+from dreambooth_helpers.copy_and_name_checkpoints import copy_and_name_checkpoints
 from ldm.data.base import Txt2ImgIterableBaseDataset
 from ldm.util import instantiate_from_config, load_model_from_config
 
@@ -206,9 +207,15 @@ if __name__ == "__main__":
         def melk(*args, **kwargs):
             # run all checkpoint hooks
             if trainer.global_rank == 0 and trainer.global_step > 0:
-                print(f"We encountered an error. Saving checkpoint 'last.ckpt' at step {trainer.global_step}...")
+                print(f"We encountered an error at step {trainer.global_step}. Saving checkpoint 'last.ckpt'...")
                 ckpt_path = os.path.join(dreambooth_global_variables.log_checkpoint_directory(), "last.ckpt")
                 trainer.save_checkpoint(ckpt_path)
+
+                print(f"Copying trained model(s) to {dreambooth_global_variables.trained_models_directory()}")
+                copy_and_name_checkpoints(
+                    config=dreambooth_config,
+                    output_folder=dreambooth_global_variables.trained_models_directory()
+                )
 
 
         import signal
@@ -217,6 +224,10 @@ if __name__ == "__main__":
 
         # run the training
         try:
+            # save the config
+            dreambooth_config.save_config_to_file(
+                save_path=dreambooth_global_variables.log_directory()
+            )
             trainer.fit(model, data)
         except Exception:
             melk()
@@ -230,6 +241,11 @@ if __name__ == "__main__":
         if trainer is not None and trainer.global_rank == 0:
             if trainer.global_step == dreambooth_config.max_training_steps:
                 print(f"Training complete. Successfully ran for {trainer.global_step} steps")
+                print(f"Copying trained model(s) to {dreambooth_global_variables.trained_models_directory()}")
+                copy_and_name_checkpoints(
+                    config=dreambooth_config,
+                    output_folder=dreambooth_global_variables.trained_models_directory()
+                )
             else:
                 print(f"Error training at step {trainer.global_step}")
 

@@ -10,41 +10,39 @@ from pytorch_lightning import seed_everything
 
 
 class JoePennaDreamboothConfigSchemaV1:
-    schema: int = 1
-    config_date_time: str
-    project_config_filename: str
-
-    # Project
-    project_name: str
-    seed: int
-    debug: bool
-    gpu: int
-
-    # Training Steps
-    max_training_steps: int
-    save_every_x_steps: int
-
-    # Training & Regularization Images
-    training_images_folder_path: str
-    training_images_count: int
-    training_images: list[str]
-    regularization_images_folder_path: str
-
-    # Token and Class
-    token: str
-    token_only: bool
-    class_word: str
-
-    # Training Params
-    flip_percent: float
-    learning_rate: float
-
-    # Model Info
-    model_repo_id: str
-    model_path: str
-
     def __init__(self):
-        pass
+        self.schema: int = 1
+        self.config_date_time: str = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%S")
+        self.project_config_filename: str = ''
+
+        # Project
+        self.project_name: str = ''
+        self.seed: int = 23
+        self.debug: bool = False
+        self.gpu: int = 0
+
+        # Training Steps
+        self.max_training_steps: int = 2000
+        self.save_every_x_steps: int = 0
+
+        # Training & Regularization Images
+        self.training_images_folder_path: str = ''
+        self.training_images_count: int = 0
+        self.training_images: list[str] = []
+        self.regularization_images_folder_path: str = None
+
+        # Token and Class
+        self.token: str = ''
+        self.token_only: bool = False
+        self.class_word: str = ''
+
+        # Training Params
+        self.flip_percent: float = 0.5
+        self.learning_rate: float = 1.0e-06
+
+        # Model Info
+        self.model_repo_id: str = ''
+        self.model_path: str = ''
 
     def saturate(
             self,

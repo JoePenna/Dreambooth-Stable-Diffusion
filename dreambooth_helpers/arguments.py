@@ -1,6 +1,6 @@
 import argparse
 
-from dreambooth_helpers.training_config import JoePennaDreamboothConfigSchemaV1
+from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
 
 
 def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:

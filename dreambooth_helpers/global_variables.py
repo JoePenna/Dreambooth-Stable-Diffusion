@@ -8,6 +8,7 @@ class DreamboothGlobalVariables():
     checkpoint_output_directory_name = "ckpts"
     checkpoint_intermediate_steps_directory_name = "trainstep_ckpts"
     config_directory_name = "configs"
+    trained_models_directory_name = "trained_models"
 
     # Set in the setup function
     training_folder_name = ""
@@ -29,6 +30,9 @@ class DreamboothGlobalVariables():
 
     def log_config_directory(self):
         return os.path.join(self.log_directory(), self.config_directory_name)
+
+    def trained_models_directory(self):
+        return self.trained_models_directory_name
 
     def _create_log_folders(self):
         os.makedirs(self.log_directory(), exist_ok=True)
