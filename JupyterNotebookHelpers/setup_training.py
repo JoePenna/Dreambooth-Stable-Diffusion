@@ -4,13 +4,11 @@ import sys
 import shutil
 from ipywidgets import widgets, Layout, HBox
 from git import Repo
-from dreambooth_helpers.joepenna_dreambooth_config import save_config_file_v1
+from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
 from JupyterNotebookHelpers.download_model import SDModelOption
 
+
 class SetupTraining:
-    form_widgets = []
-    training_images_save_path = "./training_images"
-    selected_model: SDModelOption = None
 
     def __init__(
             self,
@@ -20,6 +18,10 @@ class SetupTraining:
             input_and_description_layout=Layout(width="812px"),
     ):
         self.form_widgets = []
+        self.training_images_save_path = "./training_images"
+        self.config_save_path = "./joepenna-dreambooth-configs"
+        self.selected_model: SDModelOption = None
+
         self.style = style
         self.label_style = label_style
         self.layout = layout
@@ -184,76 +186,66 @@ class SetupTraining:
         with self.output:
             self.output.clear_output()
 
-            dataset = self.reg_images_select.value
-            uploaded_images = self.training_images_uploader.value
-            project_name = self.project_name_input.value
-            max_training_steps = int(self.max_training_steps_input.value)
-            class_word = self.class_word_input.value
-            flip_percent = float(self.flip_slider.value)
-            token = self.token_input.value
-            learning_rate = self.learning_rate_select.value
-            save_every_x_steps = int(self.save_every_x_steps_input.value)
-
-            if len(uploaded_images) == 0:
+            # training images
+            uploaded_training_images = self.training_images_uploader.value
+            if len(uploaded_training_images) == 0:
                 print("No training images provided, please click the 'Training Images' upload button.", file=sys.stderr)
                 return
+            else:
+                self.handle_training_images(uploaded_training_images)
 
             # Regularization Images
-            self.download_regularization_images(dataset)
+            regularization_images_dataset = self.reg_images_select.value
+            regularization_images_folder_path = self.download_regularization_images(regularization_images_dataset)
 
-            # Training images
-            images = self.handle_training_images(uploaded_images)
 
-            save_config_file_v1(
-                dataset=dataset,
-                project_name=project_name,
-                max_training_steps=max_training_steps,
-                training_images_count=len(images),
-                training_images=images,
-                class_word=class_word,
-                flip_percent=flip_percent,
-                token=token,
-                learning_rate=learning_rate,
-                save_every_x_steps=save_every_x_steps,
+            config = JoePennaDreamboothConfigSchemaV1()
+            config.saturate(
+                project_name=self.project_name_input.value,
+                max_training_steps=int(self.max_training_steps_input.value),
+                save_every_x_steps=int(self.save_every_x_steps_input.value),
+                training_images_folder_path=self.training_images_save_path,
+                regularization_images_folder_path=regularization_images_folder_path,
+                token=self.token_input.value,
+                token_only=False,
+                class_word=self.class_word_input.value,
+                flip_percent=float(self.flip_slider.value),
+                learning_rate=self.learning_rate_select.value,
                 model_repo_id=self.selected_model.repo_id,
-                model_filename=self.selected_model.filename,
+                model_path=self.selected_model.filename,
             )
 
-    def download_regularization_images(self, dataset):
+            config.save_config_to_file(
+                save_path=self.config_save_path,
+                create_active_config=True
+            )
+
+    def download_regularization_images(self, dataset) -> str:
         # Download Regularization Images
         repo_name = f"Stable-Diffusion-Regularization-Images-{dataset}"
-        regularization_images_git_folder = f"./{repo_name}"
-        if not os.path.exists(regularization_images_git_folder):
+        path_to_reg_images = os.path.join(repo_name, dataset)
+
+        if not os.path.exists(path_to_reg_images):
             print(f"Downloading regularization images for {dataset}. Please wait...")
-            Repo.clone_from(f"https://github.com/djbielejeski/{repo_name}.git", repo_name, progress=self.log_git_progress)
+            Repo.clone_from(f"https://github.com/djbielejeski/{repo_name}.git", repo_name,
+                            progress=self.log_git_progress)
 
             print(f"✅ Regularization images for {dataset} downloaded successfully.")
-            regularization_images_root_folder = "regularization_images"
-            if not os.path.exists(regularization_images_root_folder):
-                os.mkdir(regularization_images_root_folder)
-
-            regularization_images_dataset_folder = f"{regularization_images_root_folder}/{dataset}"
-            if not os.path.exists(regularization_images_dataset_folder):
-                os.mkdir(regularization_images_dataset_folder)
-
-            regularization_images = os.listdir(f"{regularization_images_git_folder}/{dataset}")
-            for file_name in regularization_images:
-                shutil.move(os.path.join(f"{regularization_images_git_folder}/{dataset}", file_name),
-                            regularization_images_dataset_folder)
-
         else:
             print(f"✅ Regularization images for {dataset} already exist. Skipping download...")
 
-    def log_git_progress(self, op_code:int, cur_count, max_count, message:str=''):
-        if op_code == 33: # Start, display the widget
+        return path_to_reg_images
+
+    def log_git_progress(self, op_code: int, cur_count, max_count, message: str = ''):
+        if op_code == 33:  # Start, display the widget
             display(self.regularization_images_progress_bar_widget)
 
-        if op_code == 32 or op_code == 256: # Fetching remote or Stage remote, update the widget
+        if op_code == 32 or op_code == 256:  # Fetching remote or Stage remote, update the widget
             self.regularization_images_progress_bar_widget.max = int(max_count)
             self.regularization_images_progress_bar_widget.value = int(cur_count)
             self.regularization_images_progress_bar_widget.description = f"{message}"
 
-        if op_code == 258: # Stage remote end, hide the widget
+        if op_code == 258:  # Stage remote end, hide the widget
             self.regularization_images_progress_bar_widget.close()
 
     def handle_training_images(self, uploaded_images):
@@ -269,13 +261,13 @@ class SetupTraining:
         for i, img in enumerate(uploaded_images):
             images.append(img.name)
             image_widgets.append(widgets.Image(
-                value=img.content
+                value=img.content,
+                width=256,
+                height=256,
             ))
-            with open(f"{self.training_images_save_path}/{img.name}", "w+b") as image_file:
+            with open(os.path.join(self.training_images_save_path, img.name), "w+b") as image_file:
                 image_file.write(img.content)
 
         display(HBox(image_widgets))
 
         print(f"✅ Training images uploaded successfully.")
-
-        return images

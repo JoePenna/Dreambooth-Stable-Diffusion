@@ -47,21 +47,21 @@ class JoePennaDreamboothConfigSchemaV1:
     def saturate(
             self,
             project_name: str,
-            seed: int,
-            debug: bool,
-            gpu: int,
             max_training_steps: int,
             save_every_x_steps: int,
             training_images_folder_path: str,
             regularization_images_folder_path: str,
             token: str,
-            token_only: bool,
             class_word: str,
             flip_percent: float,
             learning_rate: float,
-            model_repo_id: str,
             model_path: str,
             config_date_time: str = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%S"),
+            seed: int = 23,
+            debug: bool = False,
+            gpu: int = 0,
+            model_repo_id: str = '',
+            token_only: bool = False,
     ):
         self.project_config_filename = f"{self.config_date_time}-{project_name}-config.json"
 
@@ -110,10 +110,10 @@ class JoePennaDreamboothConfigSchemaV1:
                 raise Exception(f"Regularization Images Path Not Found: '{self.regularization_images_folder_path}'.")
 
         self.token = token
-        self.token_only = token_only
         if self.token is None or self.token == '':
             raise Exception(f"Token not provided.")
 
+        self.token_only = token_only
         if token_only is False:
             self.class_word = class_word
 
@@ -204,11 +204,11 @@ class JoePennaDreamboothConfigSchemaV1:
             os.mkdir(save_path)
 
         project_config_json = self.toJSON()
-        config_save_path = f"{save_path}/{self.project_config_filename}"
+        config_save_path = os.path.join(save_path, self.project_config_filename)
         with open(config_save_path, "w") as config_file:
             config_file.write(project_config_json)
 
         if create_active_config:
-            shutil.copy(config_save_path, f"{save_path}/active-config.json")
+            shutil.copy(config_save_path, os.path.join(save_path, "active-config.json"))
             print(project_config_json)
             print(f"✅ {self.project_config_filename} successfully generated.  Proceed to training.")
