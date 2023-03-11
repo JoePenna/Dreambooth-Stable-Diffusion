@@ -160,7 +160,7 @@ cmd> deactivate
 
 ##### Cleanup
 ```cmd
-cmd> conda deactivate 
+cmd> conda deactivate
 ```
 
 # <a name="captions"></a>  Captions
@@ -169,29 +169,29 @@ Captions are supported.  Here is the [guide](https://discord.com/channels/102327
 
 Let's say that your token is effy and your class is person, your data root is /train then:
 
-`train/img-001.jpg` is captioned with `effy person`
+`training_images/img-001.jpg` is captioned with `effy person`
 
 You can customize the captioning by adding it after a `@` symbol in the filename.
 
-`/train/img-001@a photo of effy` => `a photo of effy`
+`/training_images/img-001@a photo of effy` => `a photo of effy`
 
-You can use two tokens in your captions `S` - uppercase s - and `C` - uppercase C - to indicate subject and class.
+You can use two tokens in your captions `S` - uppercase S - and `C` - uppercase C - to indicate subject and class.
 
-`/train/img-001@S being a good C.jpg` => `effy being a good person`
+`/training_images/img-001@S being a good C.jpg` => `effy being a good person`
 
 To create a new subject you just need to create a folder for it. So:
 
-`/train/bingo/img-001.jpg` => `bingo person`
+`/training_images/bingo/img-001.jpg` => `bingo person`
 
 The class stays the same, but now the subject has changed.
 
 Again - the token S is now bingo:
 
-`/train/bingo/img-001@S is being silly.jpg` => `bingo is being silly`
+`/training_images/bingo/img-001@S is being silly.jpg` => `bingo is being silly`
 
-One folder deeper and you can change the class: `/train/bingo/dog/img-001@S being a good C.jpg` => `bingo being a good dog`
+One folder deeper and you can change the class: `/training_images/bingo/dog/img-001@S being a good C.jpg` => `bingo being a good dog`
 
-No comes the kicker: one level deeper and you can caption group of images: `/train/effy/person/a picture of/img-001.jpg` => `a picture of effy person`
+No comes the kicker: one level deeper and you can caption group of images: `/training_images/effy/person/a picture of/img-001.jpg` => `a picture of effy person`
 
 
 # <a name="text-vs-dreamb"></a>  Textual Inversion vs. Dreambooth
