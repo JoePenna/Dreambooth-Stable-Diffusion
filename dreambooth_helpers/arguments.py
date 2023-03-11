@@ -140,7 +140,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
     config = JoePennaDreamboothConfigSchemaV1()
 
     if opt.config_file_path is not None:
-        config.load_from_file(opt.config_file_path)
+        config.saturate_from_file(config_file_path=opt.config_file_path)
     else:
         config.saturate(
             project_name=opt.project_name,

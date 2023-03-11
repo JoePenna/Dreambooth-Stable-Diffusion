@@ -1,5 +1,4 @@
 from ldm.util import instantiate_from_config
-from dreambooth_helpers.global_variables import dreambooth_global_variables
 from ldm.modules.pruningckptio import PruningCheckpointIO
 from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
 
@@ -14,7 +13,7 @@ class callbacks():
             return {
                 "target": 'pytorch_lightning.callbacks.ModelCheckpoint',
                 "params": {
-                    "dirpath": dreambooth_global_variables.log_intermediate_checkpoints_directory(),
+                    "dirpath": self.config.log_intermediate_checkpoints_directory(),
                     "filename": "{epoch:06}-{step:09}",
                     "verbose": True,
                     "save_top_k": -1,
@@ -45,7 +44,7 @@ class callbacks():
         return {
             "target": "pytorch_lightning.callbacks.ModelCheckpoint",
             "params": {
-                "dirpath": dreambooth_global_variables.log_checkpoint_directory(),
+                "dirpath": self.config.log_checkpoint_directory(),
                 "filename": "{epoch:06}",
                 "verbose": True,
                 "save_last": True,
@@ -58,10 +57,10 @@ class callbacks():
             "target": "dreambooth_helpers.callback_helpers.SetupCallback",
             "params": {
                 "resume": "",
-                "now": dreambooth_global_variables.training_folder_name,
-                "logdir": dreambooth_global_variables.log_directory(),
-                "ckptdir": dreambooth_global_variables.log_checkpoint_directory(),
-                "cfgdir": dreambooth_global_variables.log_config_directory(),
+                "now": self.config.get_training_folder_name(),
+                "logdir": self.config.log_directory(),
+                "ckptdir": self.config.log_checkpoint_directory(),
+                "cfgdir": self.config.log_config_directory(),
                 "config": model_data_config,
                 "lightning_config": lightning_config,
             }
@@ -256,7 +255,7 @@ def get_dreambooth_trainer_config(config: JoePennaDreamboothConfigSchemaV1, mode
             "target": "pytorch_lightning.loggers.CSVLogger",
             "params": {
                 "name": "CSVLogger",
-                "save_dir": dreambooth_global_variables.log_directory(),
+                "save_dir": config.log_directory(),
             }
         },
         "checkpoint_callback": cb.model_checkpoint()
@@ -268,7 +267,7 @@ def get_dreambooth_trainer_config(config: JoePennaDreamboothConfigSchemaV1, mode
         trainer_config["checkpoint_callback"]["params"]["monitor"] = model.monitor
         trainer_config["checkpoint_callback"]["params"]["save_top_k"] = 1
 
-        if dreambooth_global_variables.debug:
+        if config.debug:
             print(f"Monitoring {model.monitor} as checkpoint metric.")
 
     return trainer_config

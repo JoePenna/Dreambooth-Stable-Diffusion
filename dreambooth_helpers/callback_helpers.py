@@ -10,7 +10,6 @@ from pytorch_lightning.callbacks import Callback
 from pytorch_lightning.utilities import rank_zero_info
 from pytorch_lightning.utilities.distributed import rank_zero_only
 
-from dreambooth_helpers.global_variables import dreambooth_global_variables
 
 class SetupCallback(Callback):
     def __init__(self, resume, now, logdir, ckptdir, cfgdir, config, lightning_config):
@@ -31,11 +30,10 @@ class SetupCallback(Callback):
 
     def on_fit_start(self, trainer, pl_module):
         if trainer.global_rank == 0:
-            if dreambooth_global_variables.debug:
-                print("Project config")
-                print(OmegaConf.to_yaml(self.config))
-                print("Lightning config")
-                print(OmegaConf.to_yaml(self.lightning_config))
+            print("Project config")
+            print(OmegaConf.to_yaml(self.config))
+            print("Lightning config")
+            print(OmegaConf.to_yaml(self.lightning_config))
 
             OmegaConf.save(self.config, os.path.join(self.cfgdir, "{}-project.yaml".format(self.now)))
             OmegaConf.save(OmegaConf.create({"lightning": self.lightning_config}), os.path.join(self.cfgdir, "{}-lightning.yaml".format(self.now)))

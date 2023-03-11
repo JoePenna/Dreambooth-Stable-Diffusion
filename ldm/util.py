@@ -9,7 +9,6 @@ import numpy as np
 import torch
 from PIL import Image, ImageDraw, ImageFont
 
-from dreambooth_helpers.global_variables import dreambooth_global_variables
 
 
 def log_txt_as_img(wh, xc, size=10):
@@ -75,8 +74,7 @@ def count_params(model, verbose=False):
     return total_params
 
 def load_model_from_config(config, ckpt, verbose=False):
-    if dreambooth_global_variables.debug:
-        print(f"Loading model from {ckpt}")
+    print(f"Loading model from {ckpt}")
 
     pl_sd = torch.load(ckpt, map_location="cpu")
     sd = pl_sd["state_dict"]
@@ -93,10 +91,10 @@ def load_model_from_config(config, ckpt, verbose=False):
     print("")
     print("")
 
-    if len(m) > 0 and verbose and dreambooth_global_variables.debug:
+    if len(m) > 0 and verbose:
         print("missing keys:")
         print(m)
-    if len(u) > 0 and verbose and dreambooth_global_variables.debug:
+    if len(u) > 0 and verbose:
         print("unexpected keys:")
         print(u)
 
