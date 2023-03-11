@@ -4,7 +4,7 @@ import sys
 import shutil
 from ipywidgets import widgets, Layout, HBox
 from git import Repo
-from JupyterNotebookHelpers.joe_penna_dreambooth_config import save_config_file_v1
+from dreambooth_helpers.training_config import save_config_file_v1
 from JupyterNotebookHelpers.download_model import SDModelOption
 
 class SetupTraining:

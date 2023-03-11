@@ -31,7 +31,7 @@ class SetupCallback(Callback):
 
     def on_fit_start(self, trainer, pl_module):
         if trainer.global_rank == 0:
-            if dreambooth_global_variables.is_debug:
+            if dreambooth_global_variables.debug:
                 print("Project config")
                 print(OmegaConf.to_yaml(self.config))
                 print("Lightning config")

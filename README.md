@@ -123,7 +123,7 @@ From within the My Pods page,
 ### Install Dependencies and Activate Environment
 ```cmd
 cmd> python -m venv dreambooth_joepenna
-cmd> venv\Scripts\activate.bat
+cmd> dreambooth_joepenna\Scripts\activate.bat
 cmd> pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117
 cmd> pip install -r requirements.txt
 ```

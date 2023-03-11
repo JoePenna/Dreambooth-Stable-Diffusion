@@ -75,7 +75,7 @@ def count_params(model, verbose=False):
     return total_params
 
 def load_model_from_config(config, ckpt, verbose=False):
-    if dreambooth_global_variables.is_debug:
+    if dreambooth_global_variables.debug:
         print(f"Loading model from {ckpt}")
 
     pl_sd = torch.load(ckpt, map_location="cpu")
@@ -93,10 +93,10 @@ def load_model_from_config(config, ckpt, verbose=False):
     print("")
     print("")
 
-    if len(m) > 0 and verbose and dreambooth_global_variables.is_debug:
+    if len(m) > 0 and verbose and dreambooth_global_variables.debug:
         print("missing keys:")
         print(m)
-    if len(u) > 0 and verbose and dreambooth_global_variables.is_debug:
+    if len(u) > 0 and verbose and dreambooth_global_variables.debug:
         print("unexpected keys:")
         print(u)
 

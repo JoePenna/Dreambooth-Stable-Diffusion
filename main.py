@@ -10,15 +10,12 @@ from pytorch_lightning.trainer import Trainer
 from torch.utils.data import random_split, DataLoader
 
 import dreambooth_helpers.dreambooth_configurations as db_cfg
-from dreambooth_helpers.arguments import dreambooth_arguments as dreambooth_args
+from dreambooth_helpers.arguments import parse_arguments
 from dreambooth_helpers.dataset_helpers import WrappedDataset, ConcatDataset
 from dreambooth_helpers.global_variables import dreambooth_global_variables
+from dreambooth_helpers.training_config import JoePennaDreamboothConfigSchemaV1
 from ldm.data.base import Txt2ImgIterableBaseDataset
 from ldm.util import instantiate_from_config, load_model_from_config
-
-
-## Un-comment this for windows
-## os.environ["PL_TORCH_DISTRIBUTED_BACKEND"] = "gloo"
 
 
 def worker_init_fn(_):
@@ -137,8 +134,13 @@ class DataModuleFromConfig(pl.LightningDataModule):
 
 
 if __name__ == "__main__":
-    dreambooth_args.parse_arguments()
-    dreambooth_global_variables.setup()
+    # Generate the config from the input arguments
+    dreambooth_config: JoePennaDreamboothConfigSchemaV1 = parse_arguments()
+
+    dreambooth_global_variables.setup(
+        project_name=dreambooth_config.project_name,
+        debug=dreambooth_config.debug,
+    )
 
     # add cwd for convenience and to make classes in this file available when
     # running as `python main.py`
@@ -161,10 +163,10 @@ if __name__ == "__main__":
         # Load our model
         model = load_model_from_config(
             config=dreambooth_model_data_config,
-            ckpt=dreambooth_args.training_model
+            ckpt=dreambooth_config.training_model
         )
-        model.learning_rate = dreambooth_args.learning_rate
-        if dreambooth_global_variables.is_debug:
+        model.learning_rate = dreambooth_config.learning_rate
+        if dreambooth_global_variables.debug:
             print("++++ NOT USING LR SCALING ++++")
             print(f"Setting learning rate to {model.learning_rate:.2e}")
 
@@ -184,7 +186,7 @@ if __name__ == "__main__":
 
         trainer_opt = argparse.Namespace(**dreambooth_trainer_config)
         trainer = Trainer.from_argparse_args(trainer_opt, **dreambooth_trainer_kwargs)
-        trainer.logdir = dreambooth_global_variables.LogDirectory()
+        trainer.logdir = dreambooth_global_variables.log_directory()
 
         # Setup the data
         data = instantiate_from_config(config=dreambooth_data_config)
@@ -195,7 +197,7 @@ if __name__ == "__main__":
         data.prepare_data()
         data.setup()
 
-        if dreambooth_global_variables.is_debug:
+        if dreambooth_global_variables.debug:
             print("#### Data #####")
             for k in data.datasets:
                 print(f"{k}, {data.datasets[k].__class__.__name__}, {len(data.datasets[k])}")
@@ -205,7 +207,7 @@ if __name__ == "__main__":
             # run all checkpoint hooks
             if trainer.global_rank == 0 and trainer.global_step > 0:
                 print(f"We encountered an error. Saving checkpoint 'last.ckpt' at step {trainer.global_step}...")
-                ckpt_path = os.path.join(dreambooth_global_variables.LogCheckpointDirectory(), "last.ckpt")
+                ckpt_path = os.path.join(dreambooth_global_variables.log_checkpoint_directory(), "last.ckpt")
                 trainer.save_checkpoint(ckpt_path)
 
 
@@ -226,10 +228,10 @@ if __name__ == "__main__":
         raise
     finally:
         if trainer is not None and trainer.global_rank == 0:
-            if trainer.global_step == dreambooth_args.max_training_steps:
+            if trainer.global_step == dreambooth_config.max_training_steps:
                 print(f"Training complete. Successfully ran for {trainer.global_step} steps")
             else:
                 print(f"Error training at step {trainer.global_step}")
 
-            if dreambooth_global_variables.is_debug:
+            if dreambooth_global_variables.debug:
                 print(trainer.profiler.summary())

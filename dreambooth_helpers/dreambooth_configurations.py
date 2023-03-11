@@ -10,7 +10,7 @@ class callbacks():
             return {
                 "target": 'pytorch_lightning.callbacks.ModelCheckpoint',
                 "params": {
-                    "dirpath": dreambooth_global_variables.LogIntermediateCheckpointsDirectory(),
+                    "dirpath": dreambooth_global_variables.log_intermediate_checkpoints_directory(),
                     "filename": "{epoch:06}-{step:09}",
                     "verbose": True,
                     "save_top_k": -1,
@@ -41,7 +41,7 @@ class callbacks():
         return {
             "target": "pytorch_lightning.callbacks.ModelCheckpoint",
             "params": {
-                "dirpath": dreambooth_global_variables.LogCheckpointDirectory(),
+                "dirpath": dreambooth_global_variables.log_checkpoint_directory(),
                 "filename": "{epoch:06}",
                 "verbose": True,
                 "save_last": True,
@@ -55,9 +55,9 @@ class callbacks():
             "params": {
                 "resume": "",
                 "now": dreambooth_global_variables.training_folder_name,
-                "logdir": dreambooth_global_variables.LogDirectory(),
-                "ckptdir": dreambooth_global_variables.LogCheckpointDirectory(),
-                "cfgdir": dreambooth_global_variables.LogConfigDirectory(),
+                "logdir": dreambooth_global_variables.log_directory(),
+                "ckptdir": dreambooth_global_variables.log_checkpoint_directory(),
+                "cfgdir": dreambooth_global_variables.log_config_directory(),
                 "config": model_data_config,
                 "lightning_config": lightning_config,
             }
@@ -252,7 +252,7 @@ def get_dreambooth_trainer_config(model, lightning_config) -> dict:
             "target": "pytorch_lightning.loggers.CSVLogger",
             "params": {
                 "name": "CSVLogger",
-                "save_dir": dreambooth_global_variables.LogDirectory(),
+                "save_dir": dreambooth_global_variables.log_directory(),
             }
         },
         "checkpoint_callback": cb.model_checkpoint()
@@ -264,7 +264,7 @@ def get_dreambooth_trainer_config(model, lightning_config) -> dict:
         trainer_config["checkpoint_callback"]["params"]["monitor"] = model.monitor
         trainer_config["checkpoint_callback"]["params"]["save_top_k"] = 1
 
-        if dreambooth_global_variables.is_debug:
+        if dreambooth_global_variables.debug:
             print(f"Monitoring {model.monitor} as checkpoint metric.")
 
     return trainer_config

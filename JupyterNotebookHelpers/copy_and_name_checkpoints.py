@@ -3,7 +3,7 @@ import os
 import re
 import shutil
 import glob
-from  JupyterNotebookHelpers.joe_penna_dreambooth_config import parse_config_file
+from dreambooth_helpers.training_config import parse_config_file
 
 class CopyAndNameCheckpoints:
     def __init__(self):
