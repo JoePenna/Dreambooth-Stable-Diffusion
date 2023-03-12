@@ -111,7 +111,7 @@ class JoePennaDreamboothConfigSchemaV1:
         self.training_images_count = len(_training_image_paths)
         self.training_images = _training_image_paths
 
-        if token_only is False and self.regularization_images_folder_path is not None and self.regularization_images_folder_path != '':
+        if token_only is False and regularization_images_folder_path is not None and regularization_images_folder_path is not '':
             self.regularization_images_folder_path = regularization_images_folder_path
 
             if not os.path.exists(self.regularization_images_folder_path):

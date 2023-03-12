@@ -2,11 +2,11 @@ from ldm.util import instantiate_from_config
 from ldm.modules.pruningckptio import PruningCheckpointIO
 from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
 
+
 class callbacks():
 
     def __init__(self, config: JoePennaDreamboothConfigSchemaV1):
         self.config = config
-
 
     def metrics_over_trainsteps_checkpoint(self) -> dict:
         if self.config.save_every_x_steps > 0:
@@ -163,6 +163,20 @@ def get_dreambooth_model_config(config: JoePennaDreamboothConfigSchemaV1) -> dic
 
 
 def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict:
+    reg_block = {
+        "target": "ldm.data.personalized.PersonalizedBase",
+        "params": {
+            "size": 512,
+            "set": "train",
+            "reg": True,
+            "per_image_tokens": False,
+            "repeats": 10,
+            "data_root": config.regularization_images_folder_path,
+            "coarse_class_text": config.class_word,
+            "placeholder_token": config.token,
+        }
+    }
+
     data_config = {
         "target": "main.DataModuleFromConfig",
         "params": {
@@ -183,19 +197,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                     "flip_p": config.flip_percent,
                 }
             },
-            "reg": {
-                "target": "ldm.data.personalized.PersonalizedBase",
-                "params": {
-                    "size": 512,
-                    "set": "train",
-                    "reg": True,
-                    "per_image_tokens": False,
-                    "repeats": 10,
-                    "data_root": config.regularization_images_folder_path,
-                    "coarse_class_text": config.class_word,
-                    "placeholder_token": config.token,
-                }
-            } if config.regularization_images_folder_path is not None else None,
+            "reg": reg_block if config.regularization_images_folder_path is not None and config.regularization_images_folder_path is not '' else None,
             "validation": {
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
@@ -283,7 +285,8 @@ def get_dreambooth_trainer_kwargs(config: JoePennaDreamboothConfigSchemaV1, trai
     return trainer_kwargs
 
 
-def get_dreambooth_callbacks_config(config: JoePennaDreamboothConfigSchemaV1, model_data_config, lightning_config) -> dict:
+def get_dreambooth_callbacks_config(config: JoePennaDreamboothConfigSchemaV1, model_data_config,
+                                    lightning_config) -> dict:
     cb = callbacks(config)
     callbacks_config = {
         "setup_callback": cb.setup_callback(
