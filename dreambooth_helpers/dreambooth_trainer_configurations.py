@@ -197,7 +197,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                     "flip_p": config.flip_percent,
                 }
             },
-            "reg": reg_block if config.regularization_images_folder_path is not None and config.regularization_images_folder_path is not '' else None,
+            "reg": reg_block if config.regularization_images_folder_path is not None and config.regularization_images_folder_path != '' else None,
             "validation": {
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
