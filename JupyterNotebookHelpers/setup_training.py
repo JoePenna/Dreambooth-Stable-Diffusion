@@ -185,6 +185,7 @@ class SetupTraining:
     def submit_form_click(self, b):
         with self.output:
             self.output.clear_output()
+            print('Generating config...')
 
             # training images
             uploaded_training_images = self.training_images_uploader.value
@@ -213,6 +214,7 @@ class SetupTraining:
                 learning_rate=self.learning_rate_select.value,
                 model_repo_id=self.selected_model.repo_id,
                 model_path=self.selected_model.filename,
+                run_seed_everything=False,
             )
 
             config.save_config_to_file(
@@ -249,6 +251,7 @@ class SetupTraining:
             self.regularization_images_progress_bar_widget.close()
 
     def handle_training_images(self, uploaded_images):
+        print("Uploading training images...")
         if os.path.exists(self.training_images_save_path):
             # remove existing images
             shutil.rmtree(self.training_images_save_path)
