@@ -28,7 +28,11 @@ from ldm.util import instantiate_from_config
 def load_model_from_config(config, ckpt, verbose=False):
     print(f"Loading model from {ckpt}")
     pl_sd = torch.load(ckpt, map_location="cpu")
-    sd = pl_sd["state_dict"]
+    if "state_dict" in pl_sd:
+        sd = pl_sd["state_dict"]
+    else:
+        print(f"Warning: 'state_dict' key not found in the checkpoint file {ckpt}. Attempting to load the entire checkpoint as the model state.")
+        sd = pl_sd
     config.model.params.ckpt_path = ckpt
     model = instantiate_from_config(config.model)
     m, u = model.load_state_dict(sd, strict=False)
