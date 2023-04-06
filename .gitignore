@@ -17,3 +17,6 @@ venv
 *.ckpt
 /joepenna-dreambooth-configs/
 /src/
+
+dreambooth_joepenna
+src/taming-transformers
