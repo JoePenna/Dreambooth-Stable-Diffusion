@@ -1,3 +1,4 @@
+import sys
 import torch
 import torch.nn as nn
 from functools import partial
@@ -159,6 +160,7 @@ class FrozenCLIPEmbedder(AbstractEncoder):
     def __init__(self, version="openai/clip-vit-large-patch14", device="cuda", max_length=77):
         super().__init__()
         self.tokenizer = CLIPTokenizer.from_pretrained(version)
+        # TODO: Suppress the warning here
         self.transformer = CLIPTextModel.from_pretrained(version)
         self.device = device
         self.max_length = max_length

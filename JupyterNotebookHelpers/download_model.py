@@ -3,6 +3,7 @@ import shutil
 from huggingface_hub import hf_hub_download
 from ipywidgets import widgets, Layout, HBox
 
+
 class SDModelOption:
     def __init__(self, repo_id, filename, manual=False):
         self.repo_id = repo_id
@@ -17,39 +18,42 @@ class SDModelOption:
                 filename=self.filename
             )
         else:
-            raise Exception(f"Model not valid. repo_id: {self.repo_id} or filename: {self.filename} are missing or invalid.")
+            raise Exception(
+                f"Model not valid. repo_id: {self.repo_id} or filename: {self.filename} are missing or invalid.")
 
     def is_valid(self):
         return (self.repo_id is not None and self.repo_id != '') and \
-               (self.filename is not None and self.filename != '' and '.ckpt' in self.filename)
+            (self.filename is not None and self.filename != '' and '.ckpt' in self.filename)
+
 
 class DownloadModel:
-    model_definitions = [
-        SDModelOption(repo_id="panopstor/EveryDream", filename="sd_v1-5_vae.ckpt"),
-        SDModelOption(repo_id="runwayml/stable-diffusion-v1-5", filename="v1-5-pruned-emaonly.ckpt"),
-        SDModelOption(repo_id="runwayml/stable-diffusion-v1-5", filename="v1-5-pruned.ckpt"),
-        SDModelOption(repo_id="CompVis/stable-diffusion-v-1-4-original", filename="sd-v1-4.ckpt"),
-        SDModelOption(repo_id="CompVis/stable-diffusion-v-1-4-original", filename="sd-v1-4-full-ema.ckpt"),
-        SDModelOption(repo_id=None, filename=None, manual=True),
-    ]
-    available_models = [
-        ("sd_v1-5_vae.ckpt - 4.27gb - EveryDream (incl. vae) - Recommended", 0),
-        ("v1-5-pruned-emaonly.ckpt - 4.27gb - runwayml", 1),
-        ("v1-5-pruned.ckpt - 7.7gb - runwayml", 2),
-        ("sd-v1-4.ckpt - 4.27gb - CompVis", 3),
-        ("sd-v1-4-full-ema.ckpt - 7.7gb - CompVis", 4),
-        ("Manual", 5),
-    ]
-
-    last_selected_index = 0
 
     def __init__(
-        self,
-        style={'description_width': '150px'},
-        layout=Layout(width="400px")
+            self,
+            style={'description_width': '150px'},
+            layout=Layout(width="400px")
     ):
         self.style = style
         self.layout = layout
+
+        self.model_definitions = [
+            SDModelOption(repo_id="panopstor/EveryDream", filename="sd_v1-5_vae.ckpt"),
+            SDModelOption(repo_id="runwayml/stable-diffusion-v1-5", filename="v1-5-pruned-emaonly.ckpt"),
+            SDModelOption(repo_id="runwayml/stable-diffusion-v1-5", filename="v1-5-pruned.ckpt"),
+            SDModelOption(repo_id="CompVis/stable-diffusion-v-1-4-original", filename="sd-v1-4.ckpt"),
+            SDModelOption(repo_id="CompVis/stable-diffusion-v-1-4-original", filename="sd-v1-4-full-ema.ckpt"),
+            SDModelOption(repo_id=None, filename=None, manual=True),
+        ]
+        self.available_models = [
+            ("sd_v1-5_vae.ckpt - 4.27gb - EveryDream (incl. vae) - Recommended", 0),
+            ("v1-5-pruned-emaonly.ckpt - 4.27gb - runwayml", 1),
+            ("v1-5-pruned.ckpt - 7.7gb - runwayml", 2),
+            ("sd-v1-4.ckpt - 4.27gb - CompVis", 3),
+            ("sd-v1-4-full-ema.ckpt - 7.7gb - CompVis", 4),
+            ("Manual", 5),
+        ]
+
+        self.last_selected_index = 0
 
         self.model_options = widgets.Dropdown(
             options=self.available_models,
@@ -122,7 +126,6 @@ class DownloadModel:
             else:
                 print("❌ Specified model is invalid.")
 
-
     def model_options_changed(self, *args):
         if self.last_selected_index is not self.model_options.value:
             self.last_selected_index = self.model_options.value
@@ -142,7 +145,6 @@ class DownloadModel:
                 self.model_filename_input.disabled = True
                 self.model_filename_input.placeholder = selected_model.filename
                 self.model_filename_input.description = "Selected Filename: "
-
 
     def get_selected_model(self) -> SDModelOption:
         return self.model_definitions[self.model_options.value]

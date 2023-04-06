@@ -1,0 +1,17 @@
+numpy==1.23.1
+pytorch-lightning==1.7.6
+csv-logger
+torchmetrics==0.11.1
+torch-fidelity==0.3.0
+albumentations==1.1.0
+opencv-python==4.7.0.72
+omegaconf==2.1.1
+pillow==9.4.0
+einops==0.4.1
+transformers==4.25.1
+kornia==0.6.7
+diffusers[training]==0.3.0
+captionizer==1.0.1
+-e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
+-e git+https://github.com/openai/CLIP.git@main#egg=clip
+-e .

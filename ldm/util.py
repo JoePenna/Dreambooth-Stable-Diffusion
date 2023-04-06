@@ -1,17 +1,14 @@
 import importlib
-
-import torch
-import numpy as np
-from collections import abc
-from einops import rearrange
-from functools import partial
-
 import multiprocessing as mp
-from threading import Thread
-from queue import Queue
-
+from collections import abc
 from inspect import isfunction
+from queue import Queue
+from threading import Thread
+
+import numpy as np
+import torch
 from PIL import Image, ImageDraw, ImageFont
+
 
 
 def log_txt_as_img(wh, xc, size=10):
@@ -76,6 +73,33 @@ def count_params(model, verbose=False):
         print(f"{model.__class__.__name__} has {total_params * 1.e-6:.2f} M params.")
     return total_params
 
+def load_model_from_config(config, ckpt, verbose=False):
+    print(f"Loading model from {ckpt}")
+
+    pl_sd = torch.load(ckpt, map_location="cpu")
+    sd = pl_sd["state_dict"]
+    config["model"]["params"]["ckpt_path"] = ckpt
+
+    print("")
+    print("")
+    print("---------------------------")
+    print("<THIS IS LIKELY NOT AN ERROR>")
+    model = instantiate_from_config(config["model"])
+    m, u = model.load_state_dict(sd, strict=False)
+    print("</THIS IS LIKELY NOT AN ERROR>")
+    print("---------------------------")
+    print("")
+    print("")
+
+    if len(m) > 0 and verbose:
+        print("missing keys:")
+        print(m)
+    if len(u) > 0 and verbose:
+        print("unexpected keys:")
+        print(u)
+
+    model.cuda()
+    return model
 
 def instantiate_from_config(config, **kwargs):
     if not "target" in config:

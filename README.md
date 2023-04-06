@@ -4,6 +4,10 @@
 - [Setup](#setup)
   - [Easy RunPod Instructions](#easy-runpod-instructions)
   - [Vast.AI Setup](#vast-ai-setup)
+  - [Run Locally](#running-locally)
+    - [venv](#running-locally-venv)
+    - [Conda](#running-locally-conda)
+- [Captions](#captions)
 - [Textual Inversion vs. Dreambooth](#text-vs-dreamb)
 - [Using the Generated Model](#using-the-generated-model)
 - [Debugging Your Results](#debugging-your-results)
@@ -40,9 +44,10 @@ Now, if you wanna try to do this... please read the warnings below first:
   - One day, there'll be a Stable Diffussion trained on perfect datasets. In the meantime, for moral / ethical / potentially legal reasons, I strongly discourage training someone else's art into these model (unless you've obtained explicit permission, or they've made a public statement about this technology). For similar reasons, I recommend against using artists' names in your prompts. Don't put the people who made this possible out of the job!
 
 - Onto the technical side:
-  - You can now run this on a GPU with 24GB of VRAM (e.g. 3090). Training will be slower, and you'll need to be sure this is the *only* program running.
+  - You can now run this on a GPU with **24GB of VRAM** (e.g. 3090). Training will be slower, and you'll need to be sure this is the *only* program running.
   - If, like myself, you don't happen to own one of those, I'm including a Jupyter notebook here to help you run it on a rented cloud computing platform. 
-  - It's currently tailored to [runpod.io](https://runpod.io?ref=n8yfwyum), but can work on [vast.ai](#vast-ai-setup) / etc.
+  - It's currently tailored to [runpod.io](https://runpod.io?ref=n8yfwyum) and [vast.ai](http://console.vast.ai/?ref=47390) 
+  - We do support a colab notebook as well: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JoePenna/Dreambooth-Stable-Diffusion/blob/main/dreambooth_colab_joepenna.ipynb)
   
 - This implementation does not fully implement Google's ideas on how to preserve the latent space.
 
@@ -80,16 +85,16 @@ From within the My Pods page,
 [![VIDEO INSTRUCTIONS](https://img.youtube.com/vi/7m__xadX0z0/0.jpg)](https://www.youtube.com/watch?v=7m__xadX0z0#t=5m33.1s)
 
 ## <a name="vast-ai-setup"></a>  Vast.AI Instructions
-- Sign up for [Vast.AI](https://vast.ai/)
+- Sign up for [Vast.AI](http://console.vast.ai/?ref=47390) (Referral Links by David Bielejeski)
 - Add some funds (I typically add them in $10 increments)
-- Navigate to the [Client - Create page](https://vast.ai/console/create/)
+- Navigate to the [Client - Create page](https://vast.ai/console/create/?ref=47390)
   - Select pytorch/pytorch as your docker image, and the buttons "Use Jupyter Lab Interface" and "Jupyter direct HTTPS"
   - ![img.png](readme-images/vast-ai-step1-select-docker-image.png)
-- You will want to increase your disk space, and filter on GPU RAM (12gb checkpoint files + 4gb model file + regularization images + other stuff adds up fast)
+- You will want to increase your disk space, and filter on GPU RAM (2GB checkpoint files + 2-8GB model file + regularization images + other stuff adds up fast)
   - I typically allocate 150GB
   - ![img.png](readme-images/vast-ai-step2-instance-filters.png)
   - Also good to check the Upload/Download speed for enough bandwidth so you don't spend all your money waiting for things to download.
-- Select the instance you want, and click `Rent`, then head over to your [Instances](https://vast.ai/console/instances/) page and click `Open`
+- Select the instance you want, and click `Rent`, then head over to your [Instances](https://vast.ai/console/instances/?ref=47390) page and click `Open`
   - ![img.png](readme-images/vast-ai-step3-instances.png)
   - You will get an unsafe certificate warning. Click past the warning or install the [Vast cert](https://vast.ai/static/jvastai_root.cer).
 - Click `Notebook -> Python 3` (You can do this next step a number of ways, but I typically do this)
@@ -98,9 +103,96 @@ From within the My Pods page,
   - `!git clone https://github.com/JoePenna/Dreambooth-Stable-Diffusion.git`
   - Click `run`
   - ![img.png](readme-images/vast-ai-step5-clone-repo.png)
-- Navigate into the new `Dreambooth-Stable-Diffusion` directory on the left and open the `dreambooth_runpod_joepenna.ipynb` file
+- Navigate into the new `Dreambooth-Stable-Diffusion` directory on the left and open either the `dreambooth_simple_joepenna.ipynb` or `dreambooth_runpod_joepenna.ipynb` file
   - ![img.png](readme-images/vast-ai-step6-open-notebook.png)
 - Follow the instructions in the workbook and start training
+
+## <a name="running-locally"></a> Running Locally Instructions
+
+### <a name="running-locally-venv"></a> Setup - Virtual Environment
+
+### Pre-Requisites
+1. [Git](https://gitforwindows.org/)
+2. [Python 3.10](https://www.python.org/downloads/)
+3. Open `cmd`
+4. Clone the repository
+   1. `C:\>git clone https://github.com/JoePenna/Dreambooth-Stable-Diffusion`
+5. Navigate into the repository
+   1. `C:\>cd Dreambooth-Stable-Diffusion`
+
+### Install Dependencies and Activate Environment
+```cmd
+cmd> python -m venv dreambooth_joepenna
+cmd> dreambooth_joepenna\Scripts\activate.bat
+cmd> pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117
+cmd> pip install -r requirements.txt
+```
+
+#### Run
+`cmd> python "main.py" --project_name "ProjectName" --training_model "C:\v1-5-pruned-emaonly-pruned.ckpt" --regularization_images "C:\regularization_images" --training_images "C:\training_images" --max_training_steps 2000 --class_word "person" --token "zwx" --flip_p 0 --learning_rate 1.0e-06 --save_every_x_steps 250`
+
+#### Cleanup
+```cmd
+cmd> deactivate 
+```
+
+### <a name="running-locally-conda"></a>  Setup - Conda
+
+### Pre-Requisites
+1. [Git](https://gitforwindows.org/)
+2. [Python 3.10](https://www.python.org/downloads/)
+2. [miniconda3](https://docs.conda.io/en/latest/miniconda.html)
+3. Open `Anaconda Prompt (miniconda3)`
+4. Clone the repository
+   1. `(base) C:\>git clone https://github.com/JoePenna/Dreambooth-Stable-Diffusion`
+5. Navigate into the repository
+   1. `(base) C:\>cd Dreambooth-Stable-Diffusion`
+
+### Install Dependencies and Activate Environment
+
+```cmd
+(base) C:\Dreambooth-Stable-Diffusion> conda env create -f environment.yaml
+(base) C:\Dreambooth-Stable-Diffusion> conda activate dreambooth_joepenna
+```
+
+##### Run
+`cmd> python "main.py" --project_name "ProjectName" --training_model "C:\v1-5-pruned-emaonly-pruned.ckpt" --regularization_images "C:\regularization_images" --training_images "C:\training_images" --max_training_steps 2000 --class_word "person" --token "zwx" --flip_p 0 --learning_rate 1.0e-06 --save_every_x_steps 250`
+
+##### Cleanup
+```cmd
+cmd> conda deactivate
+```
+
+# <a name="captions"></a>  Captions
+
+Captions are supported.  Here is the [guide](https://discord.com/channels/1023277529424986162/1029222282511515678) on how we implemented them.
+
+Let's say that your token is effy and your class is person, your data root is /train then:
+
+`training_images/img-001.jpg` is captioned with `effy person`
+
+You can customize the captioning by adding it after a `@` symbol in the filename.
+
+`/training_images/img-001@a photo of effy` => `a photo of effy`
+
+You can use two tokens in your captions `S` - uppercase S - and `C` - uppercase C - to indicate subject and class.
+
+`/training_images/img-001@S being a good C.jpg` => `effy being a good person`
+
+To create a new subject you just need to create a folder for it. So:
+
+`/training_images/bingo/img-001.jpg` => `bingo person`
+
+The class stays the same, but now the subject has changed.
+
+Again - the token S is now bingo:
+
+`/training_images/bingo/img-001@S is being silly.jpg` => `bingo is being silly`
+
+One folder deeper and you can change the class: `/training_images/bingo/dog/img-001@S being a good C.jpg` => `bingo being a good dog`
+
+No comes the kicker: one level deeper and you can caption group of images: `/training_images/effy/person/a picture of/img-001.jpg` => `a picture of effy person`
+
 
 # <a name="text-vs-dreamb"></a>  Textual Inversion vs. Dreambooth
 The majority of the code in this repo was written by Rinon Gal et. al, the authors of the Textual Inversion research paper. Though a few ideas about regularization images and prior loss preservation (ideas from "Dreambooth") were added in, out of respect to both the MIT team and the Google researchers, I'm renaming this fork to:
