@@ -1,3 +1,7 @@
+# Quick start how-to guide by Yushan
+
+[https://medium.com/@yushantripleseven/dreambooth-training-joepenna-on-vast-ai-5f1018239820](https://medium.com/@yushantripleseven/dreambooth-training-joepenna-on-vast-ai-5f1018239820)
+
 # Index
 
 - [Notes by Joe Penna](#notes-by-joe-penna)
