@@ -12,7 +12,7 @@
     - [venv](#running-locally-venv)
     - [Conda](#running-locally-conda)
   - [Configuration File and Command Line Reference](#config-file-and-command-line-reference)
-- [Captions](#captions)
+- [Captions & Multiple Subject/Concept Support](#captions-and-multi-concept)
 - [Textual Inversion vs. Dreambooth](#text-vs-dreamb)
 - [Using the Generated Model](#using-the-generated-model)
 - [Debugging Your Results](#debugging-your-results)
@@ -256,7 +256,7 @@ python "main.py" --config_file_path "path/to/the/my-config.json"
 python "main.py" --project_name "My Project Name" --max_training_steps 3000 --token "owhx" --training_model "D:\\stable-diffusion\\models\\v1-5-pruned-emaonly-pruned.ckpt" --training_images "D:\\stable-diffusion\\training_images\\24 Images - captioned" --regularization_images "D:\\stable-diffusion\\regularization_images\\Stable-Diffusion-Regularization-Images-person_ddim\\person_ddim" --class_word "woman" --flip_p 0.0 --save_every_x_steps 500
 ```
 
-# <a name="captions"></a>  Captions
+# <a name="captions-and-multi-concept"></a>  Captions and Multiple Subject/Concept Support
 
 Captions are supported.  Here is the [guide](https://discord.com/channels/1023277529424986162/1029222282511515678) on how we implemented them.
 
