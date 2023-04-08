@@ -11,6 +11,7 @@
   - [Run Locally](#running-locally)
     - [venv](#running-locally-venv)
     - [Conda](#running-locally-conda)
+  - [Configuration File and Command Line Reference](#config-file-and-command-line-reference)
 - [Captions](#captions)
 - [Textual Inversion vs. Dreambooth](#text-vs-dreamb)
 - [Using the Generated Model](#using-the-generated-model)
@@ -165,6 +166,94 @@ cmd> deactivate
 ##### Cleanup
 ```cmd
 cmd> conda deactivate
+```
+
+# <a name="config-file-and-command-line-reference"></a>  Configuration File and Command Line Reference
+
+## Example Configuration File
+
+```
+{
+    "class_word": "woman",
+    "config_date_time": "2023-04-08T16-54-00",
+    "debug": false,
+    "flip_percent": 0.0,
+    "gpu": 0,
+    "learning_rate": 1e-06,
+    "max_training_steps": 3500,
+    "model_path": "D:\\stable-diffusion\\models\\v1-5-pruned-emaonly-pruned.ckpt",
+    "model_repo_id": "",
+    "project_config_filename": "my-config.json",
+    "project_name": "<token> project",
+    "regularization_images_folder_path": "D:\\stable-diffusion\\regularization_images\\Stable-Diffusion-Regularization-Images-person_ddim\\person_ddim",
+    "save_every_x_steps": 250,
+    "schema": 1,
+    "seed": 23,
+    "token": "<token>",
+    "token_only": false,
+    "training_images": [
+        "001@a photo of <token> looking down.png",
+        "002-DUPLICATE@a close photo of <token> smiling wearing a black sweatshirt.png",
+        "002@a photo of <token> wearing a black sweatshirt sitting on a blue couch.png",
+        "003@a photo of <token> smiling wearing a red flannel shirt with a door in the background.png",
+        "004@a photo of <token> wearing a purple sweater dress standing with her arms crossed in front of a piano.png",
+        "005@a close photo of <token> with her hand on her chin.png",
+        "005@a photo of <token> with her hand on her chin wearing a dark green coat and a red turtleneck.png",
+        "006@a close photo of <token>.png",
+        "007@a close photo of <token>.png",
+        "008@a photo of <token> wearing a purple turtleneck and earings.png",
+        "009@a close photo of <token> wearing a red flannel shirt with her hand on her head.png",
+        "011@a close photo of <token> wearing a black shirt.png",
+        "012@a close photo of <token> smirking wearing a gray hooded sweatshirt.png",
+        "013@a photo of <token> standing in front of a desk.png",
+        "014@a close photo of <token> standing in a kitchen.png",
+        "015@a photo of <token> wearing a pink sweater with her hand on her forehead sitting on a couch with leaves in the background.png",
+        "016@a photo of <token> wearing a black shirt standing in front of a door.png",
+        "017@a photo of <token> smiling wearing a black v-neck sweater sitting on a couch in front of a lamp.png",
+        "019@a photo of <token> wearing a blue v-neck shirt in front of a door.png",
+        "020@a photo of <token> looking down with her hand on her face wearing a black sweater.png",
+        "021@a close photo of <token> pursing her lips wearing a pink hooded sweatshirt.png",
+        "022@a photo of <token> looking off into the distance wearing a striped shirt.png",
+        "023@a photo of <token> smiling wearing a blue beanie holding a wine glass with a kitchen table in the background.png",
+        "024@a close photo of <token> looking at the camera.png"
+    ],
+    "training_images_count": 24,
+    "training_images_folder_path": "D:\\stable-diffusion\\training_images\\24 Images - captioned"
+}
+```
+
+### Using your configuration for training
+
+```
+python "main.py" --config_file_path "path/to/the/my-config.json"
+```
+
+## Command Line Parameters
+
+[dreambooth_helpers\arguments.py](https://github.com/JoePenna/Dreambooth-Stable-Diffusion/blob/main/dreambooth_helpers/arguments.py)
+
+| Command | Type | Example | Description |
+| ------- | ---- | ------- | ----------- |
+| `--config_file_path` | string | `"C:\\Users\\David\\Dreambooth Configs\\my-config.json"` | The path the configuration file to use |
+| `--project_name` | string | `"My Project Name"` | Name of the project |
+| `--debug` | bool | `False` | *Optional* Defaults to `False`. Enable debug logging |
+| `--seed` | int | `23` | *Optional* Defaults to `23`. Seed for seed_everything |
+| `--max_training_steps` | int | `3000` | Number of training steps to run |
+| `--token` | string | `"owhx"` | Unique token you want to represent your trained model. |
+| `--token_only` | bool | `False` | *Optional* Defaults to `False`. Train only using the token and no class. |
+| `--training_model` | string | `"D:\\stable-diffusion\\models\\v1-5-pruned-emaonly-pruned.ckpt"` | Path to model to train (model.ckpt) |
+| `--training_images` | string | `"D:\\stable-diffusion\\training_images\\24 Images - captioned"` | Path to training images directory |
+| `--regularization_images` | string | `"D:\\stable-diffusion\\regularization_images\\Stable-Diffusion-Regularization-Images-person_ddim\\person_ddim"` | Path to directory with regularization images |
+| `--class_word` | string | `"woman"` | Match class_word to the category of images you want to train. Example: `man`, `woman`, `dog`, or `artstyle`. |
+| `--flip_p` | float | `0.0` | *Optional* Defaults to `0.5`. Flip Percentage. Example: if set to `0.5`, will flip (mirror) your training images 50% of the time. This helps expand your dataset without needing to include more training images. This can lead to worse results for face training since most people's faces are not perfectly symmetrical. |
+| `--learning_rate` | float | `1.0e-06` | *Optional* Defaults to `1.0e-06` (0.000001). Set the learning rate. Accepts scientific notation. |
+| `--save_every_x_steps` | int | `250` | *Optional* Defaults to `0`. Saves a checkpoint every x steps.   At `0` only saves at the end of training when `max_training_steps` is reached. |
+| `--gpu` | int | `0` | *Optional* Defaults to `0`. Specify a GPU other than 0 to use for training.  Multi-GPU support is not currently implemented.
+
+### Using your configuration for training
+
+```
+python "main.py" --project_name "My Project Name" --max_training_steps 3000 --token "owhx" --training_model "D:\\stable-diffusion\\models\\v1-5-pruned-emaonly-pruned.ckpt" --training_images "D:\\stable-diffusion\\training_images\\24 Images - captioned" --regularization_images "D:\\stable-diffusion\\regularization_images\\Stable-Diffusion-Regularization-Images-person_ddim\\person_ddim" --class_word "woman" --flip_p 0.0 --save_every_x_steps 500
 ```
 
 # <a name="captions"></a>  Captions
