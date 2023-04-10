@@ -52,7 +52,7 @@ Now, if you wanna try to do this... please read the warnings below first:
   - You can now run this on a GPU with **24GB of VRAM** (e.g. 3090). Training will be slower, and you'll need to be sure this is the *only* program running.
   - If, like myself, you don't happen to own one of those, I'm including a Jupyter notebook here to help you run it on a rented cloud computing platform. 
   - It's currently tailored to [runpod.io](https://runpod.io?ref=n8yfwyum) and [vast.ai](http://console.vast.ai/?ref=47390) 
-  - We do support a colab notebook as well: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JoePenna/Dreambooth-Stable-Diffusion/blob/main/dreambooth_colab_joepenna.ipynb)
+  - We do support a colab notebook as well: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JoePenna/Dreambooth-Stable-Diffusion/blob/main/dreambooth_google_colab_joepenna.ipynb)
   
 - This implementation does not fully implement Google's ideas on how to preserve the latent space.
 
