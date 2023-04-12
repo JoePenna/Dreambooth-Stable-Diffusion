@@ -249,9 +249,10 @@ class SetupTraining:
 
         if op_code == 258:  # Stage remote end, hide the widget
             self.regularization_images_progress_bar_widget.close()
-
+    
     def handle_training_images(self, uploaded_images):
         print("Uploading training images...")
+
         if os.path.exists(self.training_images_save_path):
             # remove existing images
             shutil.rmtree(self.training_images_save_path)
@@ -261,16 +262,18 @@ class SetupTraining:
 
         images = []
         image_widgets = []
-        for i, img in enumerate(uploaded_images):
-            images.append(img.name)
+
+        for k, v in uploaded_images.items():
+            images.append(k)
             image_widgets.append(widgets.Image(
-                value=img.content,
+                value=v['content'],
                 width=256,
                 height=256,
             ))
-            with open(os.path.join(self.training_images_save_path, img.name), "w+b") as image_file:
-                image_file.write(img.content)
+            with open(os.path.join(self.training_images_save_path, k), "w+b") as image_file:
+                image_file.write(v['content'])
 
         display(HBox(image_widgets))
 
         print(f"✅ Training images uploaded successfully.")
+
