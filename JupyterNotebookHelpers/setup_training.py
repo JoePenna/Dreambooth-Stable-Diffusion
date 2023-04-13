@@ -28,16 +28,16 @@ class SetupTraining:
         self.input_and_description_layout = input_and_description_layout
 
         # Training Images
-        self.training_images_uploader = widgets.FileUpload(
-            accept='image/*',
-            multiple=True,
-            description='Training Images',
-            tooltip='Training Images',
-            button_style='warning',
-            style=self.style,
-            layout=self.layout,
-        )
-        self.form_widgets.append(self.training_images_uploader)
+        # self.training_images_uploader = widgets.FileUpload(
+        #     accept='image/*',
+        #     multiple=True,
+        #     description='Training Images',
+        #     tooltip='Training Images',
+        #     button_style='warning',
+        #     style=self.style,
+        #     layout=self.layout,
+        # )
+        # self.form_widgets.append(self.training_images_uploader)
 
         # Regularization Images
         self.reg_images_select = widgets.Dropdown(
@@ -149,11 +149,18 @@ class SetupTraining:
             style=self.style,
             layout=self.layout,
         )
-        self.form_widgets.append(self.save_form_button);
+        self.form_widgets.append(self.save_form_button)
 
         # bind the save_form_button to the submit_form_click event
         self.save_form_button.on_click(self.submit_form_click)
 
+        print(f"Please, upload training images to {self.training_images_save_path} BEFORE PRESSING SAVE BUTTON")
+        if os.path.exists(self.training_images_save_path):
+            # remove existing images
+            shutil.rmtree(self.training_images_save_path)
+
+        # Create the training images directory
+        os.mkdir(self.training_images_save_path)
         self.output = widgets.Output()
 
     def build_label(self, text):
@@ -188,17 +195,16 @@ class SetupTraining:
             print('Generating config...')
 
             # training images
-            uploaded_training_images = self.training_images_uploader.value
-            if len(uploaded_training_images) == 0:
-                print("No training images provided, please click the 'Training Images' upload button.", file=sys.stderr)
-                return
-            else:
-                self.handle_training_images(uploaded_training_images)
+            # uploaded_training_images = self.training_images_uploader.value
+            # if len(uploaded_training_images) == 0:
+            #     print("No training images provided, please click the 'Training Images' upload button.", file=sys.stderr)
+            #     return
+            # else:
+            # self.handle_training_images(0)
 
             # Regularization Images
             regularization_images_dataset = self.reg_images_select.value
             regularization_images_folder_path = self.download_regularization_images(regularization_images_dataset)
-
 
             config = JoePennaDreamboothConfigSchemaV1()
             config.saturate(
@@ -249,10 +255,9 @@ class SetupTraining:
 
         if op_code == 258:  # Stage remote end, hide the widget
             self.regularization_images_progress_bar_widget.close()
-    
+
     def handle_training_images(self, uploaded_images):
         print("Uploading training images...")
-
         if os.path.exists(self.training_images_save_path):
             # remove existing images
             shutil.rmtree(self.training_images_save_path)
@@ -276,4 +281,3 @@ class SetupTraining:
         display(HBox(image_widgets))
 
         print(f"✅ Training images uploaded successfully.")
-
