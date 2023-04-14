@@ -1,6 +1,10 @@
-# Quick start how-to guide by Yushan
 
-[https://medium.com/@yushantripleseven/dreambooth-training-joepenna-on-vast-ai-5f1018239820](https://medium.com/@yushantripleseven/dreambooth-training-joepenna-on-vast-ai-5f1018239820)
+# Extended Dreambooth How-To Guides by Yushan
+[For Running On Vast.ai](https://medium.com/@yushantripleseven/dreambooth-training-joepenna-on-vast-ai-5f1018239820)<br>
+[For Running On Google Colab](https://medium.com/@yushantripleseven/dreambooth-training-joepenna-on-google-colab-63ec6e6cf050)<br>
+[For Running On a Local PC (Windows)](https://medium.com/@yushantripleseven/dreambooth-training-joepenna-on-a-local-pc-windows-f00a4fd11dfd)<br>
+[For Running On a Local PC (Ubuntu)](https://medium.com/@yushantripleseven/dreambooth-training-joepenna-on-a-local-pc-ubuntu-a2bf796430d2)<br>
+
 
 # Index
 
