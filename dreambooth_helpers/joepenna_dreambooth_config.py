@@ -1,6 +1,7 @@
 import json
 import math
 import os
+import glob
 import shutil
 import sys
 from datetime import datetime, timezone
@@ -78,7 +79,6 @@ class JoePennaDreamboothConfigSchemaV1:
         # parameter values
         self.project_config_filename = f"{self.config_date_time}-{self.project_name}-config.json"
 
-
         self.seed = seed
 
         # Global seed
@@ -101,11 +101,13 @@ class JoePennaDreamboothConfigSchemaV1:
         if not os.path.exists(self.training_images_folder_path):
             raise Exception(f"Training Images Path Not Found: '{self.training_images_folder_path}'.")
 
-        image_extensions = ['.jpg', '.jpeg', '.png']
-        _training_image_paths = [
-            file_name for file_name in os.listdir(self.training_images_folder_path)
-            if any(file_name.endswith(ext) for ext in image_extensions)
-        ]
+        _training_image_paths = [f for f in
+                                 glob.glob(os.path.join(self.training_images_folder_path, '**', '*.jpg'), recursive=True) +
+                                 glob.glob(os.path.join(self.training_images_folder_path, '**', '*.jpeg'), recursive=True) +
+                                 glob.glob(os.path.join(self.training_images_folder_path, '**', '*.png'), recursive=True)
+                             ]
+
+        _training_image_paths = [os.path.relpath(f, self.training_images_folder_path) for f in _training_image_paths]
 
         if len(_training_image_paths) <= 0:
             raise Exception(f"No Training Images (*.png, *.jpg, *.jpeg) found in '{self.training_images_folder_path}'.")
