@@ -4,7 +4,7 @@
 [For Running On Google Colab](https://medium.com/@yushantripleseven/dreambooth-training-joepenna-on-google-colab-63ec6e6cf050)<br>
 [For Running On a Local PC (Windows)](https://medium.com/@yushantripleseven/dreambooth-training-joepenna-on-a-local-pc-windows-f00a4fd11dfd)<br>
 [For Running On a Local PC (Ubuntu)](https://medium.com/@yushantripleseven/dreambooth-training-joepenna-on-a-local-pc-ubuntu-a2bf796430d2)<br>
-
+[Using Captions in JoePenna's Dreambooth](https://medium.com/@yushantripleseven/using-captions-with-dreambooth-joepenna-dreambooth-716f5b9e9866)<br>
 
 # Index
 
