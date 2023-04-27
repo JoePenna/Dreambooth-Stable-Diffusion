@@ -207,3 +207,4 @@ Dreambooth is now supported in HuggingFace Diffusers for training with Stable Di
 Try it out here:
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/sd_dreambooth_training.ipynb)
+
