@@ -80,10 +80,10 @@ From within the My Pods page,
 - Click the menu button (to the left of the purple play button)
 - Click Edit Pod
 - Update "Docker Image Name" to one of the following (tested 2023/06/27):
--- `runpod/pytorch:3.10-2.0.1-120-devel`
--- `runpod/pytorch:3.10-2.0.1-118-runtime`
--- `runpod/pytorch:3.10-2.0.0-117`
--- `runpod/pytorch-3.10-1.13.1-116`
+  - `runpod/pytorch:3.10-2.0.1-120-devel`
+  - `runpod/pytorch:3.10-2.0.1-118-runtime`
+  - `runpod/pytorch:3.10-2.0.0-117`
+  - `runpod/pytorch-3.10-1.13.1-116`
 - Click Save.
 - Restart your pod
 
