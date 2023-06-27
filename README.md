@@ -92,7 +92,7 @@ From within the My Pods page,
 - Sign up for RunPod. Feel free to use my [referral link here](https://runpod.io?ref=n8yfwyum), so that I don't have to pay for it (but you do).
 - After logging in, select either `SECURE CLOUD` or `COMMUNITY CLOUD`
 - Make sure you find a "High" interent speed so you're not wasting time and money on slow downloads
-- Select something with at **least 24gb VRAM** like RTX 3090 or RTX A5000
+- Select something with at **least 24gb VRAM** like RTX 3090, RTX 4090 or RTX A5000
 
 - Follow these video instructions below:
 
