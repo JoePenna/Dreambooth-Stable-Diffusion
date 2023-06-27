@@ -73,13 +73,17 @@ Now, if you wanna try to do this... please read the warnings below first:
 # <a name="setup"></a> Setup
 ## <a name="easy-runpod-instructions"></a> Easy RunPod Instructions
 
-**Note (1/7/23) Runpod recently upgraded their base Docker image which breaks this repo by default. None of the Youtube videos are up to date, yet. Follow along the typical Runpod Youtube videos/tutorials, with the following changes:**
+**Note Runpod periodically upgrades their base Docker image which can lead to repo not working. None of the Youtube videos are up to date but you can still follow them as a guide. Follow along the typical Runpod Youtube videos/tutorials, with the following changes:**
 
 From within the My Pods page,
 
 - Click the menu button (to the left of the purple play button)
 - Click Edit Pod
-- Update "Docker Image Name" to say `runpod/pytorch`. It shouldn't have any numbers or letters after it.
+- Update "Docker Image Name" to one of the following (tested 2023/06/27):
+  - `runpod/pytorch:3.10-2.0.1-120-devel`
+  - `runpod/pytorch:3.10-2.0.1-118-runtime`
+  - `runpod/pytorch:3.10-2.0.0-117`
+  - `runpod/pytorch-3.10-1.13.1-116`
 - Click Save.
 - Restart your pod
 
@@ -88,7 +92,7 @@ From within the My Pods page,
 - Sign up for RunPod. Feel free to use my [referral link here](https://runpod.io?ref=n8yfwyum), so that I don't have to pay for it (but you do).
 - After logging in, select either `SECURE CLOUD` or `COMMUNITY CLOUD`
 - Make sure you find a "High" interent speed so you're not wasting time and money on slow downloads
-- Select something with at **least 24gb VRAM** like RTX 3090 or RTX A5000
+- Select something with at **least 24gb VRAM** like RTX 3090, RTX 4090 or RTX A5000
 
 - Follow these video instructions below:
 
