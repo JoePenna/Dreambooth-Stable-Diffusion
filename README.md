@@ -83,7 +83,7 @@ From within the My Pods page,
   - `runpod/pytorch:3.10-2.0.1-120-devel`
   - `runpod/pytorch:3.10-2.0.1-118-runtime`
   - `runpod/pytorch:3.10-2.0.0-117`
-  - `runpod/pytorch-3.10-1.13.1-116`
+  - `runpod/pytorch:3.10-1.13.1-116`
 - Click Save.
 - Restart your pod
 
