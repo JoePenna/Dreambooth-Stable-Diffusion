@@ -8,9 +8,9 @@ dependencies:
   - python=3.10
   - pip=22.2.2
   - cudatoolkit=11.8
-  - pytorch
+  - pytorch=2.0.1
   - torchvision
-  - pytorch-cuda=11.7
+  - pytorch-cuda=11.8
   - numpy=1.23.1
   - pip:
     - pytorch-lightning==1.7.6
